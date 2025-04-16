@@ -1,0 +1,16 @@
+from collections import defaultdict
+class Solution:
+    def countGood(self, nums: List[int], k: int) -> int:
+        c=defaultdict(int)
+        t_p=0
+        l=0
+        ans=0
+        for r in range(len(nums)):
+            t_p+=c[nums[r]]
+            c[nums[r]]+=1
+            while t_p>=k:
+                ans+=len(nums)-r
+                c[nums[l]]-=1
+                t_p-=c[nums[l]]
+                l+=1
+        return ans
