@@ -1,4 +1,10 @@
 from collections import defaultdict
+
+# We use a sliding window approach with two pointers, left (l) and right (r).
+# For each element at the right pointer, we add the number of good pairs it forms with previous elements to t_p (total pairs).
+# Once the total pairs (t_p) reach or exceed k, we know the subarray from left (l) to right (r) is valid, and we count all subarrays starting at l and ending at or beyond r.
+# Then we move the left pointer (l) forward to shrink the window and check for other valid subarrays.
+
 class Solution:
     def countGood(self, nums: List[int], k: int) -> int:
         c=defaultdict(int)
