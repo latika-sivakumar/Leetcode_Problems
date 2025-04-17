@@ -1,0 +1,46 @@
+# Trie Data Structure Implementation
+
+# A Trie (also known as a Prefix Tree) is a tree-like data structure that stores strings.
+# It is used to efficiently store and search for strings or prefixes in a dataset.
+
+# This implementation supports three main operations:
+# 1. `insert(word)`: Inserts a word into the Trie. Each character of the word is stored
+#    as a node in the Trie. An 'end' marker is added to mark the end of a word.
+# 2. `search(word)`: Checks if a word is present in the Trie by following the nodes corresponding
+#    to each character in the word. Returns `True` if the word is found, otherwise `False`.
+# 3. `startsWith(prefix)`: Checks if there is any word in the Trie that starts with the given prefix.
+#    This operation returns `True` if the prefix exists, otherwise `False`.
+
+# The Trie is implemented using a dictionary (`root`) where:
+# - Each key is a character in the word.
+# - Each value is another dictionary representing the next character in the word (a child node).
+# - The word is marked by inserting an 'end' key at the final node of the word.
+
+class Trie:
+
+    def __init__(self):
+        self.root={}
+
+    def insert(self, word: str) -> None:
+        c=self.root
+        for i in word:
+            if i not in c:
+                c[i]={}
+            c=c[i]
+        c["end"]=""
+
+    def search(self, word: str) -> bool:
+        c=self.root
+        for i in word:
+            if i not in c:
+                return False
+            c=c[i]
+        return "end" in c
+
+    def startsWith(self, prefix: str) -> bool:
+        c=self.root
+        for i in prefix:
+            if i not in c:
+                return False
+            c=c[i]
+        return True
