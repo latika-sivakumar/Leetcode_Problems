@@ -1,0 +1,22 @@
+# The problem asks to determine the minimum number of rabbits in the forest given an array of answers.
+# Each element in the array represents the number of other rabbits that a rabbit thinks have the same color as it.
+# We need to calculate the minimum number of rabbits required based on these answers, ensuring the answers are consistent.
+# 
+# Approach:
+# 1. We use a Counter to count how many times each unique answer appears in the array.
+# 2. For each unique answer, we calculate how many groups of rabbits are needed to accommodate those that gave that answer.
+#    - Each group corresponds to the answer plus one (because the rabbit itself is also counted in the group).
+#    - We round up (using math.ceil) to ensure that any partial group is counted as a full group.
+# 3. We sum the total rabbits required for all groups to find the minimum number of rabbits.
+# 
+# The solution ensures that the answers from the rabbits are consistent, and groups are formed optimally to minimize the number of rabbits.
+
+class Solution:
+    def numRabbits(self, answers: List[int]) -> int:
+        c=Counter(answers)
+        t=0
+        for i in c:
+            g_s=i+1
+            g_c=math.ceil(c[i]/g_s)
+            t+=g_s*g_c
+        return t
