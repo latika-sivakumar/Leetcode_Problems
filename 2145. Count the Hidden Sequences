@@ -1,0 +1,17 @@
+# Given a list of differences between elements of a hidden sequence
+# and a value range [lower, upper], this code calculates how many
+# possible hidden sequences can be formed such that:
+# 1. The differences between consecutive elements match the input list.
+# 2. All elements of the sequence stay within the [lower, upper] range.
+# It does this by:
+# - Tracking how high and low the sequence can go starting from 0.
+# - Figuring out how many starting values keep the whole sequence in bounds.
+
+class Solution:
+    def numberOfArrays(self, diff: List[int], lower: int, upper: int) -> int:
+        a=maxima=minima=0
+        for d in diff:
+            a+=d
+            maxima=max(maxima,a)
+            minima=min(minima,a)
+        return max(0,(upper-lower)-(maxima-minima)+1)
