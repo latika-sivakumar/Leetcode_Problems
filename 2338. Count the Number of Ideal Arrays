@@ -1,0 +1,21 @@
+# This solution counts the number of distinct ideal arrays of length n,
+# where each element is between 1 and maxValue, and every element is divisible by the previous one.
+# It builds sequences step-by-step using a frequency map and valid multiples,
+# and uses combinations (n-1 choose k) to count possible positions of increasing values.
+# The result is returned modulo 1_000_000_007 to handle large numbers.
+
+from math import comb
+from collections import Counter
+class Solution:
+    def idealArrays(self, n: int, maxValue: int) -> int:
+        ans=maxValue
+        freq={x:1 for x in range(1,maxValue+1)}
+        for k in range(1,n):
+            temp=Counter()
+            for x in freq:
+                for m in range(2,maxValue//x+1):
+                    ans+=comb(n-1,k)*freq[x]
+                    temp[m*x]+=freq[x]
+            freq=temp
+            ans%=1_000_000_007
+        return ans
