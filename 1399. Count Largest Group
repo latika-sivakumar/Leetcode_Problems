@@ -1,0 +1,21 @@
+# For all numbers from 1 to n:
+#   - Calculate the sum of digits for each number.
+#   - Group numbers based on this digit sum.
+# Then:
+#   - Find the largest group size.
+#   - Count how many groups have this largest size.
+# Returns the count of such largest groups.
+
+from collections import defaultdict
+class Solution:
+    def countLargestGroup(self, n: int) -> int:
+        d=defaultdict(int)
+        for i in range(1,n+1):
+            s=sum(int(di) for di in str(i))
+            d[s]+=1
+        c=0
+        maxi=max(d.values())
+        for i in d.values():
+            if i==maxi:
+                c+=1
+        return c
