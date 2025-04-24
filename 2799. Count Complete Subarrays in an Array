@@ -1,0 +1,19 @@
+# This function counts how many subarrays in the list `nums` contain all the different numbers from the list.
+# Steps:
+# 1. Find out how many unique numbers are in the whole list.
+# 2. Check every possible subarray using two loops.
+# 3. For each subarray, keep adding numbers to a set (to track unique values).
+# 4. If the set has all the unique numbers from the list, count that subarray.
+# 5. At the end, return the total count of such subarrays.
+
+class Solution:
+    def countCompleteSubarrays(self, nums: List[int]) -> int:
+        k=len(set(nums))
+        c=0
+        for i in range(len(nums)):
+            s=set()
+            for j in range(i,len(nums)):
+                s.add(nums[j])
+                if len(s)==k:
+                    c+=1
+        return c
