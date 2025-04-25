@@ -1,0 +1,17 @@
+# Counts subarrays where the count of elements with (num % modulo == k)
+# has a remainder of k when taken modulo again.
+# Uses prefix sum and a hashmap to efficiently track valid subarrays.
+
+class Solution:
+    def countInterestingSubarrays(self, nums: List[int], modulo: int, k: int) -> int:
+        prefixModCount={0:1}
+        prefixSum=0
+        result=0
+        for n in nums:
+            if n%modulo==k:
+                prefixSum+=1
+            rem=prefixSum%modulo
+            target=(rem-k)%modulo
+            result+=prefixModCount.get(target,0)            
+            prefixModCount[rem]=prefixModCount.get(rem,0)+1
+        return result        
