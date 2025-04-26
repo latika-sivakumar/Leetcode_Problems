@@ -1,0 +1,24 @@
+# This code counts the number of subarrays where the minimum element is minK and the maximum element is maxK.
+# Approach:
+# - Iterate through the array while tracking:
+#     - The latest positions (indices) where minK (pMin) and maxK (pMax) were found.
+#     - The latest position where an invalid element (outside [minK, maxK]) was found (bad).
+# - For each index:
+#     - Update pMin, pMax, or bad depending on the current number.
+#     - If both pMin and pMax have been seen, calculate how many valid subarrays end at the current index by taking the minimum of pMin and pMax and subtracting the latest bad index.
+# - Sum up these counts to get the final answer.
+
+class Solution:
+    def countSubarrays(self, nums: List[int], minK: int, maxK: int) -> int:
+        pMin=pMax=bad=-1
+        ans=0
+        for i,num in enumerate(nums):
+            if num==minK:
+                pMin=i
+            if num==maxK:
+                pMax=i
+            if num<minK or num>maxK:
+                bad=i
+            if pMin!=-1 and pMax!=-1:
+                ans+=max(0,min(pMin,pMax)-bad)
+        return ans
