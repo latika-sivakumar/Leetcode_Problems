@@ -1,0 +1,16 @@
+# This function counts the number of subarrays of size exactly 3, such that (first element + third element) * 2 equals the middle element.
+# It uses a sliding window of size 3, moving one element at a time.
+# For each window, it checks the condition and increments the count if satisfied.
+
+class Solution:
+    def countSubarrays(self, nums: List[int]) -> int:
+        s_i=0
+        e_i=2
+        t=0
+        n=len(nums)
+        while e_i<n:
+            if (nums[s_i]+nums[e_i])*2==nums[s_i+1]:
+                t+=1
+            e_i+=1
+            s_i+=1
+        return t
