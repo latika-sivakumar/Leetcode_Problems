@@ -1,0 +1,20 @@
+# Initialize start of window, window sum, and answer counter
+# Iterate through each element as the end of the sliding window
+# Add current element to the window sum
+# While the product of sum and window size is greater than or equal to k, shrink the window from the start
+# Subtract the starting element from sum and move start pointer ahead
+# Add the number of valid subarrays ending at current 'end' index
+# Return the total count of valid subarrays
+
+class Solution:
+    def countSubarrays(self, nums: List[int], k: int) -> int:
+        st=0
+        sums=0
+        c=0
+        for end in range(len(nums)):
+            sums+=nums[end]
+            while sums*(end-st+1)>=k:
+                sums-=nums[st]
+                st+=1
+            c+=(end-st+1)
+        return c
