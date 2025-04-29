@@ -1,0 +1,27 @@
+# This function counts the number of subarrays where the maximum element appears at least 'k' times.
+# Approach:
+# - Find the maximum value in the array (max_val).
+# - Use a sliding window technique:
+#     - Expand the window by moving the right pointer 'r'.
+#     - Keep track of how many times max_val appears in the current window using 'max_c'.
+#     - When the count of max_val in the window is at least 'k':
+#         - All subarrays starting from current left pointer 'l' up to right pointer 'r' (and beyond) are valid.
+#         - Add (len(nums) - r) to the total count 'c'.
+#         - Shrink the window from the left by moving 'l' and adjusting 'max_c' if necessary.
+# - This ensures all valid subarrays are counted without checking each subarray individually.
+
+class Solution:
+    def countSubarrays(self, nums: List[int], k: int) -> int:
+        max_val=max(nums)
+        c=0
+        l=0
+        max_c=0
+        for r in range(len(nums)):
+            if nums[r]==max_val:
+                max_c+=1
+            while max_c>=k:
+                c+=len(nums)-r
+                if nums[l]==max_val:
+                    max_c-=1
+                l+=1
+        return c
