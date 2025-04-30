@@ -1,0 +1,10 @@
+# To return the length of the last word in a given string.
+# Steps:
+# 1. Use split() to break the string into a list of words (split by whitespace).
+# 2. Access the last word using s[-1].
+# 3. Return the length of the last word using len().
+
+class Solution:
+    def lengthOfLastWord(self, s: str) -> int:
+        s=s.split()
+        return len(s[-1])
