@@ -1,0 +1,15 @@
+# This function counts how many numbers in the given list have an even number of digits.
+# Approach:
+# - Initialize a counter `c` to 0.
+# - Iterate through each number in the list `nums`.
+# - Convert the number to a string and check if the length of the string (i.e., number of digits) is even.
+# - If the number of digits is even, increment the counter.
+# - Finally, return the count of such numbers.
+
+class Solution:
+    def findNumbers(self, nums: List[int]) -> int:
+        c=0
+        for i in nums:
+            if len(str(i))%2==0:
+                c+=1
+        return c
