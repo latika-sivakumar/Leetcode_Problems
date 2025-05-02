@@ -1,0 +1,31 @@
+# This solution simulates how dominoes fall over time.
+# The main idea is to look at the space between two fixed dominoes (either 'L' or 'R') and decide what happens in between.
+
+# 1. We add artificial dominoes: 'L' at the beginning and 'R' at the end to handle edge cases more easily.
+# 2. We scan the string from left to right.
+# 3. For every pair of non-dot dominoes (like 'R....L' or 'L....L'):
+#    - If both ends are the same ('R...R' or 'L...L'), we fill the middle with the same direction.
+#    - If it's 'R....L', we fill from both ends toward the center with 'R' and 'L'. If they meet in the middle, it stays '.'.
+#    - If it's 'L....R', we leave the middle as it is (dots), since forces cancel out or never meet.
+# 4. At the end, we remove the extra 'L' and 'R' we added at the start and end.
+
+class Solution:
+    def pushDominoes(self, dominoes: str) -> str:
+        s='L'+dominoes+'R'
+        prev,result,n=0,list(s),len(s)  
+        for i in range(1,n):
+            if s[i]=='.':
+                continue
+            if i-prev>1:
+                if s[prev]==s[i]: 
+                    for k in range(prev+1,i):
+                        result[k]=s[i]
+                elif s[prev]=='R' and s[i]=='L': 
+                    l,r=prev+1,i-1
+                    while l<r:
+                        result[l]='R'
+                        result[r]='L'
+                        l+=1
+                        r-=1
+            prev=i
+        return ''.join(result[1:-1])
