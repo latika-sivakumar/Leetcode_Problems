@@ -1,0 +1,26 @@
+# This function determines the minimum number of rotations (swaps between top and bottom halves of dominoes)
+# needed to make all values in either the top row or the bottom row the same across a set of dominoes.
+# It checks for each possible number from 1 to 6 (as dominoes have numbers 1-6) if it's possible
+# to make all tops or all bottoms equal to that number. If valid, it calculates the minimum number
+# of rotations required to do so. If no such number can make all rows equal, it returns -1.
+
+# Time Complexity: O(6 * n) => O(n), where n is the number of dominoes (since the outer loop runs at most 6 times).
+# Space Complexity: O(1), constant extra space used (no extra space used proportional to input size).
+
+class Solution:
+    def minDominoRotations(self, tops: List[int], bottoms: List[int]) -> int:
+        res=float("inf")
+        for val in range(1,7):
+            top=bottom=0
+            valid=True
+            for t,b in zip(tops,bottoms):
+                if t!=val and b!=val:
+                    valid=False 
+                    break
+                if t!=val:
+                    top+=1
+                if b!=val:
+                    bottom+=1
+            if valid:
+                res=min(res,top,bottom)
+        return -1 if res==float("inf") else res
