@@ -1,0 +1,32 @@
+# This solution computes the number of ways to tile a 2 x n board using:
+# - Dominoes (1x2 or 2x1), and
+# - Trominoes (L-shaped, covers 3 squares).
+
+# The recurrence relation used is:
+#   dp[n] = dp[n-1]*2 + dp[n-3]
+
+# Explanation:
+# - dp[n-1]*2: accounts for placing a vertical domino or an L-tromino (2 symmetric orientations)
+# - dp[n-3]: accounts for ways to place one L-tromino covering 3 columns and reducing the problem to 2 x (n - 3)
+
+# Base cases:
+# - dp[0] = 1 (empty board has 1 way)
+# - dp[1] = 1 (only one vertical domino)
+# - dp[2] = 2 (two vertical dominoes or two horizontal dominoes)
+
+# The solution uses dynamic programming with bottom-up tabulation and modulus 10^9 + 7 to avoid overflow.
+
+# Time Complexity: O(n) - we compute dp[i] once for each i from 3 to n
+# Space Complexity: O(n) - we store all dp[i] values from 0 to n in a list
+
+class Solution:
+    def numTilings(self, n: int) -> int:
+        mod=10**9+7
+        if n==1: return 1  
+        if n==2: return 2  
+        if n==0: return 0  
+        dp=[1,1,2] 
+        for i in range(3,n+1):
+            value=(dp[i-3]+2*dp[i-1])%mod
+            dp.append(value)
+        return dp[-1]  
