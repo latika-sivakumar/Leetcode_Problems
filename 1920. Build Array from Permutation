@@ -1,0 +1,13 @@
+# Given a zero-based permutation array `nums`, this function builds a new array `ans` such that:
+# ans[i] = nums[nums[i]] for each index i.
+# The result is stored in a new list and returned.
+
+# Time Complexity: O(n) - We traverse the entire list once.
+# Space Complexity: O(n) - We create a new list of the same size to store the result.
+
+class Solution:
+    def buildArray(self, nums: List[int]) -> List[int]:
+        l=[]
+        for i in range(len(nums)):
+            l.append(nums[nums[i]])
+        return l
