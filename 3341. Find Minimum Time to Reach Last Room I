@@ -1,0 +1,41 @@
+"""
+Problem:
+Given a 2D grid `moveTime` where moveTime[i][j] represents the earliest time you can enter cell (i, j),
+find the minimum time required to reach the bottom-right cell (m-1, n-1) starting from the top-left cell (0, 0),
+while being allowed to move up, down, left, or right in one unit of time.
+You cannot enter a cell before its moveTime[i][j] (you must wait if you arrive too early).
+
+Approach:
+- Use Dijkstra's algorithm (priority queue based BFS) to find the shortest time to reach (m-1, n-1).
+- Maintain a `min_time` matrix to track the minimum time taken to reach each cell.
+- Start from (0, 0) at time 0.
+- For each cell, explore all four directions (up, down, left, right).
+- For a valid neighbor, calculate the earliest time you can enter (max(current time, moveTime[neighbor]) + 1).
+- If this time is better than the previous time for that neighbor, update it and push it into the heap.
+
+Time Complexity: O(m * n * log(m * n))
+- Each cell can be pushed into the heap at most once (when a better path is found),
+  and heap operations (push/pop) take O(log(m * n)) time.
+
+Space Complexity: O(m * n)
+- `min_time` matrix of size m x n to track minimum arrival times.
+- Priority queue (heap) can store up to m*n entries in the worst case.
+"""
+
+class Solution:
+    def minTimeToReach(self, moveTime: List[List[int]]) -> int:
+        m,n=len(moveTime),len(moveTime[0])
+        min_time=[[inf]*n for _ in range(m)]
+        min_time[0][0]=0
+        heap=[(0,0,0)] 
+        while heap:
+            t,i,j=heappop(heap)
+            if i==m-1 and j==n-1:
+                return t
+            if t==min_time[i][j]:
+                for ii,jj in (i-1,j),(i+1,j),(i,j-1),(i,j+1):
+                    if 0<=ii<m and 0<=jj<n:
+                        tt=max(t,moveTime[ii][jj])+1
+                        if min_time[ii][jj]>tt:
+                            min_time[ii][jj]=tt
+                            heappush(heap,(tt,ii,jj))
