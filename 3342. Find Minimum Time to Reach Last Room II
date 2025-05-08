@@ -1,0 +1,44 @@
+# Problem:
+# Given a 2D grid `moveTime` where each cell (i,j) has a minimum time constraint to be visited,
+# this function finds the **minimum time required** to move from the top-left corner (0,0)
+# to the bottom-right corner (n-1, m-1) of the grid. Movement is allowed in 4 directions (up, down, left, right).
+# Movement time alternates: 1 second for even-numbered moves, 2 seconds for odd-numbered moves (starting with even=0).
+# You can only enter a cell if the current time is at least moveTime[i][j].
+
+# Approach:
+# - Dijkstra-like BFS using a min-heap (priority queue) to always expand the least-time path first.
+# - Each state in the heap is a tuple: (current_time, moves_so_far, row, col).
+# - For each possible move, if it's within bounds and unvisited, calculate:
+#     - Wait time: max(current time, moveTime at destination cell)
+#     - Travel time: 1 or 2 seconds based on whether the number of moves so far is even or odd.
+#     - Total time = wait + travel time.
+# - Mark visited cells to prevent reprocessing.
+# - The algorithm returns the minimum time when the bottom-right cell is reached.
+
+# Time Complexity:
+# O(n * m * log(n * m)) — In the worst case, each cell is pushed into the heap once,
+# and heap operations (push/pop) take O(log(n * m)) time.
+
+# Space Complexity:
+# O(n * m) — for the visited matrix and the priority queue in the worst case.
+
+import heapq
+class Solution:
+    def minTimeToReach(self, moveTime: List[List[int]]) -> int:
+        n,m=len(moveTime),len(moveTime[0])
+        vis=[[False]*m for _ in range(n)]
+        heap=[(0,0,0,0)]
+        vis[0][0]=True
+        dirs=[(0,1),(1,0),(-1,0),(0,-1)]
+        while heap:
+            time,moves,r,c=heapq.heappop(heap)
+            if r==n-1 and c==m-1:
+                return time
+            for dr,dc in dirs:
+                nr,nc=r+dr,c+dc
+                if 0<=nr<n and 0<=nc<m and not vis[nr][nc]:
+                    vis[nr][nc]=True
+                    wait=max(time,moveTime[nr][nc])
+                    travel_time=1 if moves%2==0 else 2
+                    heapq.heappush(heap,(wait+travel_time,moves+1,nr,nc))
+        return -1
