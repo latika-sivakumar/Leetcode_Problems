@@ -1,0 +1,36 @@
+"""
+Description:
+    Given two arrays `nums1` and `nums2` containing integers (some of which can be zero),
+    this function computes the minimum possible equal total sum for both arrays by replacing 
+    each zero with any positive integer ≥ 1 (we assume 1 for minimization).
+    
+    - It replaces all 0s with 1 temporarily in the sum computation.
+    - Then it checks:
+        * If one array has no zero, but the other still ends up with a higher sum,
+          it's impossible to equalize, so return -1.
+        * Otherwise, return the maximum of the two adjusted sums (which is the minimal equal sum
+          possible under these conditions).
+
+Example:
+    nums1 = [0, 2], nums2 = [3]
+    nums1_sum = 1 + 2 = 3, nums2_sum = 3 → Equal → return 3
+    nums1 = [0, 1], nums2 = [5] → nums1_sum = 2, nums2_sum = 5 → nums1 has 1 zero but nums2 has none → return -1
+
+Time Complexity:
+    O(n + m), where n = len(nums1), m = len(nums2)
+    - O(n) to sum and count zeros in nums1
+    - O(m) to sum and count zeros in nums2
+
+Space Complexity:
+    O(1) — constant extra space (no additional data structures used)
+"""
+
+class Solution:
+    def minSum(self, nums1, nums2):
+        nums1_sum=sum(x if x!=0 else 1 for x in nums1)
+        nums2_sum=sum(x if x!=0 else 1 for x in nums2)
+        nums1_zeros=nums1.count(0)
+        nums2_zeros=nums2.count(0)
+        if (nums1_zeros==0 and nums2_sum>nums1_sum) or (nums2_zeros==0 and nums1_sum>nums2_sum):
+            return -1
+        return max(nums1_sum,nums2_sum)
