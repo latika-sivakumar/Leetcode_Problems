@@ -1,0 +1,23 @@
+# Description:
+#   Checks whether the input list 'arr' contains at least three consecutive odd numbers.
+#   It maintains a counter 'c' that tracks the count of consecutive odd numbers.
+#   If three or more consecutive odds are found, it returns True.
+#   Otherwise, it resets the counter to 0 when an even number is encountered.
+
+# Time Complexity: O(n), where n is the length of the input list.
+#   - We iterate through the list once.
+
+# Space Complexity: O(1)
+#   - We use only a constant amount of extra space (the counter 'c').
+
+class Solution:
+    def threeConsecutiveOdds(self, arr: List[int]) -> bool:
+        c=0
+        for num in arr:
+            if num%2!=0:
+                c+=1
+                if c>=3:
+                    return True
+            else:
+                c=0
+        return False
