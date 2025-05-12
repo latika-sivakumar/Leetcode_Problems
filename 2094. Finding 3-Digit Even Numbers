@@ -1,0 +1,38 @@
+# This function takes a list of digits and returns all unique 3-digit even numbers that can be formed using the digits in the list. Each digit from the list can be used at most as many times as it appears in the input list.
+
+# How it works:
+# 1. Iterates through all possible 3-digit numbers from 100 to 999.
+# 2. For each number, checks if it can be constructed using the input digits without exceeding the frequency of any digit.
+# 3. Only includes numbers that are even (i.e., divisible by 2).
+# 4. Uses a Counter to efficiently track and update digit usage.
+# 5. Returns a list of all valid 3-digit even numbers that can be formed.
+
+# Time Complexity:
+# O(900 * 3) = O(2700) => effectively O(1), since 900 numbers are constant.
+# For each number from 100 to 999, we convert it to a string and check if its digits are present in the input digit list using a Counter, which takes O(1) time.
+# (since the maximum number of digits in a 3-digit number is 3).
+
+# Space Complexity:
+# O(1) auxiliary space — uses a Counter of at most 10 digits (0-9), and a result list of at most 900 numbers (which is constant space).
+# No recursion or additional data structures grow with input size.
+
+# Note:
+# The solution assumes that all digits in the result must be selected from the input list without replacement, and only even numbers (ending in 0, 2, 4, 6, 8) are valid results.
+
+class Solution:
+    def findEvenNumbers(self, digits: List[int]) -> List[int]:
+        arr=[]
+        for i in range(100,999):
+            flag=True
+            seen=Counter(digits)
+            for s in str(i):
+                if int(s) not in seen:
+                    flag=False
+                    break
+                else:
+                    seen[int(s)]-=1
+                    if seen[int(s)]==0:
+                        del seen[int(s)]
+            if flag and i%2==0:
+                arr.append(i)
+        return arr     
