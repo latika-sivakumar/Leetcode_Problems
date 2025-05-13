@@ -1,0 +1,42 @@
+"""
+This function computes the length of a string after performing a series of character transformations over 't' steps.
+Transformation rules:
+- If a character is 'z', it is replaced with "ab".
+- Otherwise, a character is replaced by the next character in the English alphabet (e.g., 'a' → 'b').
+
+Key Optimization:
+Instead of transforming the string directly (which leads to exponential growth and TLE),
+we simulate the process using character frequency counts only.
+
+Steps:
+1. Count the frequency of each character in the input string using a 26-element list 'cnt'.
+2. For each transformation:
+   - For each character from 'a' to 'y', increment the count of the next character.
+   - For 'z', add its count to both 'a' and 'b' in the next round.
+3. After 't' transformations, sum all character counts to get the final string length.
+
+The final length of the string modulo (10^9 + 7) is returned.
+
+Time Complexity: O(t * 26) → O(t)
+- We process 26 characters for each of the 't' transformations.
+
+Space Complexity: O(26) → O(1)
+- Only fixed-size lists are used to store character counts.
+"""
+
+class Solution:
+    def lengthAfterTransformations(self, s: str, t: int) -> int:
+        mod=10**9+7
+        cnt=[0]*26
+        for ch in s:
+            cnt[ord(ch)-ord('a')]+=1      
+        for _ in range(t):
+            new_cnt=[0]*26
+            for i in range(26):
+                if i==25:  
+                    new_cnt[0]=(new_cnt[0]+cnt[i])%mod
+                    new_cnt[1]=(new_cnt[1]+cnt[i])%mod
+                else:
+                    new_cnt[i+1]=(new_cnt[i+1]+cnt[i])%mod
+            cnt=new_cnt
+        return sum(cnt)%mod
