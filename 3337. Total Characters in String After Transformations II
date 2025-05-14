@@ -1,0 +1,75 @@
+"""
+Problem:
+Given a string `s`, an integer `t`, and a list `nums` of size 26, where each `nums[i]` denotes the number of forward shifts allowed for character `chr(i + ord('a'))`,
+this function calculates the total length of the transformed string after applying `t` transformation rounds.
+
+Transformation Rule:
+Each character 'a' to 'z' can be transformed into characters (c + 1), (c + 2), ..., (c + nums[c]) modulo 26.
+This transformation is repeated `t` times for all characters in the string.
+
+Approach:
+1. Count the frequency of each character in the string `s`.
+2. Build a transformation matrix (26 x 26) where `transform[i][j]` indicates how many times character `i` can turn into `j` in one round.
+3. Raise the matrix to the power `t` using fast matrix exponentiation to get the net effect of `t` rounds.
+4. Multiply the character frequency vector with the final transformation matrix to get the new character frequencies.
+5. Sum the frequencies to get the final string length.
+
+Functions:
+- `mat_mult(a, b)`: Matrix multiplication of 26x26 matrices under modulo.
+- `mat_pow(mat, power)`: Fast exponentiation of matrix using binary exponentiation.
+- `apply(mat, vec)`: Applies transformation matrix to the frequency vector.
+
+Returns:
+- Total number of characters in the final string modulo 10^9+7.
+
+Time Complexity:
+- Building transformation matrix: O(26 * max(nums[i])) → O(26 * max_shift)
+- Matrix multiplication: O(26^3)
+- Matrix exponentiation: O(log(t)) matrix multiplications → O(26^3 * log(t))
+- Applying matrix to vector: O(26^2)
+
+Total Time Complexity: **O(26^3 * log(t))**
+
+Space Complexity:
+- Transformation matrix: O(26^2)
+- Frequency vector and result vector: O(26)
+- Final matrix and temporary matrices: O(26^2)
+
+Total Space Complexity: **O(26^2)**
+"""
+
+from typing import List
+class Solution:
+    def lengthAfterTransformations(self, s: str, t: int, nums: List[int]) -> int:
+        mod=10**9+7
+        freq=[0]*26
+        for c in s:
+            freq[ord(c)-ord('a')]+=1
+        transform=[[0]*26 for _ in range(26)]
+        for i in range(26):
+            for j in range(1,nums[i]+1):
+                transform[i][(i+j)%26]+=1
+        def mat_mult(a,b):
+            res=[[0]*26 for _ in range(26)]
+            for i in range(26):
+                for j in range(26):
+                    for k in range(26):
+                        res[i][j]=(res[i][j]+a[i][k]*b[k][j])%mod
+            return res
+        def mat_pow(mat,power):
+            result=[[int(i==j) for j in range(26)] for i in range(26)]  
+            while power>0:
+                if power%2==1:
+                    result=mat_mult(result,mat)
+                mat=mat_mult(mat,mat)
+                power//=2
+            return result
+        def apply(mat,vec):
+            res=[0]*26
+            for i in range(26):
+                for j in range(26):
+                    res[i]=(res[i]+mat[j][i]*vec[j])%mod
+            return res
+        final_mat=mat_pow(transform,t)
+        final_freq=apply(final_mat,freq)
+        return sum(final_freq)%mod
