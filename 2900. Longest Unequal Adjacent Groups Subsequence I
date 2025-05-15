@@ -1,0 +1,19 @@
+"""
+This function returns the longest subsequence of words such that no two consecutive words in the result belong to the same group.
+
+It iterates through the list of words and checks whether the current word's group is different from the group of the last added word. 
+If the group is different, the word is included in the result.
+
+Time Complexity: O(n), where n is the number of words.
+Space Complexity: O(n), for storing the resulting subsequence.
+"""
+
+class Solution:
+    def getLongestSubsequence(self, words, groups):
+        result=[]
+        last=-1
+        for i in range(len(words)):
+            if groups[i]!=last:
+                result.append(words[i])
+                last=groups[i]
+        return result
