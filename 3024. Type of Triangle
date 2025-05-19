@@ -1,0 +1,28 @@
+# This function determines the type of triangle that can be formed with three side lengths.
+# Input: A list of 3 integers representing side lengths of a triangle.
+# Output: A string - "equilateral", "isosceles", "scalene", or "none" based on the triangle type.
+
+# Triangle Type Rules:
+# - "none"       → Not a valid triangle (if the sum of any two sides is less than or equal to the third).
+# - "equilateral"→ All three sides are equal.
+# - "isosceles"  → Exactly two sides are equal.
+# - "scalene"    → All sides are different.
+
+# Time Complexity: O(1)
+# - Sorting a list of 3 elements takes constant time.
+
+# Space Complexity: O(1)
+# - No extra space used apart from a few variables.
+
+class Solution:
+    def triangleType(self, nums: List[int]) -> str:
+        nums.sort()
+        if nums[0]+nums[1]<=nums[2]:
+            return "none"
+        size=len(set(nums))
+        if size==1:
+            return "equilateral"
+        elif size==2:
+            return "isosceles"
+        else:
+            return "scalene"
