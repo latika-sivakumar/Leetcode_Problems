@@ -1,0 +1,34 @@
+# This function checks if it is possible to make all elements of the given array `nums` zero or less
+# after performing a set of increment operations defined in `queries`.
+
+# Each query [l, r] represents an operation where all elements from index `l` to `r` (inclusive) can be incremented by 1.
+# The goal is to determine whether these operations, when applied optimally, can reduce every element in `nums` to zero or below.
+
+# Approach:
+# 1. Use a **difference array** `diff` to efficiently apply range increment operations.
+# 2. Convert the difference array to actual counts using prefix sum.
+# 3. For each index in `nums`, check if the number of operations is sufficient to reduce `nums[i]` to zero or less.
+
+# Time Complexity: O(n + q), where:
+#     - n is the length of the `nums` array
+#     - q is the number of queries
+# Explanation:
+#     - O(q) to update the difference array
+#     - O(n) to compute prefix sums and compare with `nums`
+
+# Space Complexity: O(n), where n is the length of `nums`
+#     - This is for the difference array `diff` of size n+1
+
+class Solution(object):
+    def isZeroArray(self, nums, queries):
+        diff=[0]*(len(nums)+1)
+        for l,r in queries:
+            diff[l]+=1
+            if r+1<len(nums):
+                diff[r+1]-=1
+        cnt=0
+        for i in range(len(nums)):
+            cnt+=diff[i]
+            if nums[i]>cnt:
+                return False
+        return True
