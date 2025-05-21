@@ -1,0 +1,26 @@
+"""
+This function modifies the input matrix 'g' **in-place** such that if an element is 0, its entire row and column are set to 0. This is a space-optimized solution to the "Set Matrix Zeroes" problem.
+
+Logic:
+1. `r` and `c` are boolean arrays indicating which rows and columns **do not** contain any zeros.
+   - `map(all, q)` checks if all elements in a row/column are non-zero.
+   - `[*map(all, q)]` converts the map object to a list of booleans.
+   - `zip(*g)` transposes the matrix to iterate over columns.
+2. `product(range(...))` iterates over all cell positions (i, j).
+3. `g[i][j] *= r[i] & c[j]` sets `g[i][j]` to 0 if either its row or column originally contained a 0.
+   - If `r[i]` or `c[j]` is `False`, then `r[i] & c[j]` is `False` (0), so `g[i][j]` becomes 0.
+
+Time Complexity: O(m × n)
+- We traverse the entire matrix once to compute `r` and `c`.
+- Then we traverse it again to update elements.
+- Let `m = number of rows`, `n = number of columns`.
+
+Space Complexity: O(m + n)
+- We use two auxiliary lists of size `m` and `n` to track which rows and columns are safe.
+"""
+
+class Solution:
+    def setZeroes(self, g: List[List[int]]) -> None:
+        r,c=[[*map(all,q)] for q in (g,zip(*g))]
+        for i,j in product(range(len(g)),range(len(g[0]))):
+            g[i][j]*=r[i]&c[j]
