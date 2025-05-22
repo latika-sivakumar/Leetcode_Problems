@@ -1,0 +1,48 @@
+# Given an array `nums` and a list of queries [l, r], determine the maximum number of unused queries.
+# Each query [l, r] allows you to "cover" a position `i` in nums if l <= i <= r.
+# For each index `i`, you must have at least `nums[i]` active queries covering it.
+# The goal is to use the fewest number of queries while satisfying all `nums[i]` constraints and return the number of queries that are not used. If it's impossible, return -1.
+
+# Approach:
+# 1. Preprocess the queries to group them by their starting index `l` using `starts[]`.
+# 2. Iterate through each index `i` in `nums`:
+#    a. Push all new queries starting at `i` to a max-heap `avail` (by -r for max-heap behavior).
+#    b. Remove any expired queries from `active` (those whose r < i).
+#    c. Check how many active queries cover `i`. If not enough, activate new ones from `avail`.
+#    d. If it's not possible to satisfy nums[i] using available queries, return -1.
+# 3. The number of queries used is `chosen`, so return `q - chosen` (unused queries).
+
+# Time Complexity:
+# - O(n + q log q)
+#   - O(q) to build `starts[]`.
+#   - For each index i, at most q queries are pushed/popped from heaps (each heap op is log q).
+
+# Space Complexity:
+# - O(n + q)
+#   - `starts` takes O(n + q) space to store query ends by their start index.
+#   - `avail` and `active` heaps store at most q elements total.
+
+class Solution:
+    def maxRemoval(self, nums: List[int], queries: List[List[int]]) -> int:
+        n,q=len(nums),len(queries)
+        starts=[[] for _ in range(n)]
+        for l,r in queries:
+            starts[l].append(r)
+        avail=[]  
+        active=[]  
+        chosen=0
+        for i in range(n):
+            for r in starts[i]:
+                heapq.heappush(avail,-r)
+            while active and active[0]<i:
+                heapq.heappop(active)
+            need=nums[i]-len(active)
+            for _ in range(need):
+                while avail and -avail[0]<i:
+                    heapq.heappop(avail)
+                if not avail:
+                    return -1
+                r=-heapq.heappop(avail)
+                heapq.heappush(active,r)
+                chosen+=1
+        return q-chosen
