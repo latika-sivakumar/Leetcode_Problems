@@ -1,0 +1,34 @@
+# This function calculates the maximum possible sum of node values in a tree after optionally XOR-ing
+# any subset of node values with a given number k. The goal is to maximize the total sum of values after the XOR operation.
+# Each node can be XOR-ed at most once, and edges represent a tree structure, but the structure is not directly used in this function.
+
+# Algorithm:
+# - Calculate the base sum of the input array `nums`.
+# - Iterate through `nums` and compute the gain `d` = (x ^ k) - x for each number.
+#   - If `d` > 0 (XOR-ing increases the value), count it and add `d` to `sum_pos`.
+#   - Track the smallest positive gain and the best non-positive (negative or zero) gain.
+# - If the count of positive-gain numbers is even, use all of them to maximize the sum.
+# - If the count is odd, discard the smallest positive gain or the least negative gain (whichever results in minimum loss).
+#   This ensures the final count of XOR-ed elements is even (a requirement implied by the XOR pair structure in tree problems).
+
+# Time Complexity: O(n), where n is the number of elements in `nums`
+# Space Complexity: O(1), since only a constant amount of extra space is used
+
+class Solution:
+    def maximumValueSum(self, nums: List[int], k: int, edges: List[List[int]]) -> int:
+        base=sum(nums)     
+        sum_pos=cnt_pos=0
+        min_pos=float('inf')
+        best_nonpos=float('-inf')
+        for x in nums:
+            d=(x^k)-x  
+            if d>0:       
+                cnt_pos+=1
+                sum_pos+=d
+                min_pos=min(min_pos,d)
+            else:           
+                best_nonpos=max(best_nonpos,d)
+        if cnt_pos%2==0: 
+            return base+sum_pos 
+        loss=min(min_pos,-best_nonpos) 
+        return base+sum_pos-loss
