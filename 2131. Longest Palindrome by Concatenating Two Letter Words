@@ -1,0 +1,37 @@
+# Function to calculate the length of the longest palindrome that can be built using given 2-letter words
+# Each word can be used at most once
+
+# Logic:
+# - Count all words using a Counter
+# - For palindromic words like "aa", "bb", etc., pair them as much as possible
+#   - If there's an odd count, leave one in the center if not already used (flag ensures only one center)
+# - For non-palindromic pairs like "ab" and "ba", take as many matching pairs as possible
+#   - Each such pair contributes 4 to the palindrome length (2 from each word)
+# - Use a visited set to avoid processing mirror pairs twice
+
+# Time Complexity: O(n), where n is the number of words (each word is processed once)
+# Space Complexity: O(n), for the Counter and visited set
+
+class Solution:
+    def longestPalindrome(self, words: List[str]) -> int:
+        visited=set()
+        count=Counter(words)
+        ans=0
+        flag=True
+        for s,cnt in count.items():
+            if s in visited:
+                continue
+            if s[0]==s[1]:
+                if cnt%2:
+                    cnt-=1
+                    if flag:
+                        ans+=2
+                        flag=False
+                ans+=cnt*2
+                continue
+            ss=s[1]+s[0]
+            maxAdd=min(cnt,count[ss])
+            ans+=(maxAdd*2)*2
+            visited.add(s)
+            visited.add(ss)
+        return ans
