@@ -1,0 +1,64 @@
+"""
+This code solves the problem of finding the largest color value in a directed graph, where each node is assigned a color, and the color value of a path is the maximum number of nodes on that path with the same color.
+
+Approach:
+- Use Kahn's algorithm for topological sorting to detect cycles and process nodes in order.
+- For each node, maintain a dp array of size 26 (for each lowercase alphabet letter), where dp[node][c] represents the maximum count of color 'c' in any path ending at that node.
+- Initialize dp for all nodes based on their colors.
+- Traverse the graph using BFS (via queue), updating dp values for neighbors based on the current node.
+- Track the maximum color value seen across all paths.
+- If a cycle is detected (i.e., not all nodes are visited), return -1.
+
+Key Components:
+- `colors` is a string where colors[i] is the color of the i-th node.
+- `edges` is a list of directed edges between nodes.
+- `adj` is an adjacency list representing the graph.
+- `indegree` keeps track of the number of incoming edges for each node.
+- `dp[node][c]` tracks the max frequency of color c in any path ending at node.
+- `queue` is used for BFS traversal of the graph.
+- `visited` ensures we detect cycles (by comparing to n).
+- `maxColor` stores the result (maximum color frequency in any valid path).
+
+Time Complexity: O(n + m + 26 * m)
+- Building the graph takes O(n + m)
+- For each edge and for each of the 26 colors, we update the dp matrix => O(26 * m)
+
+Space Complexity: O(n * 26 + m)
+- dp matrix takes O(n * 26)
+- adj list takes O(m)
+- indegree and queue take O(n)
+
+Returns:
+- An integer representing the maximum number of times a single color appears in any path of the graph.
+- If there's a cycle in the graph, returns -1 (as no valid path can exist).
+"""
+
+from collections import deque, defaultdict
+class Solution:
+    def largestPathValue(self, colors: str, edges: List[List[int]]) -> int:
+        n=len(colors)
+        adj=[[] for _ in range(n)]
+        indegree=[0]*n
+        for u,v in edges:
+            adj[u].append(v)
+            indegree[v]+=1
+        dp=[[0]*26 for _ in range(n)]
+        queue=deque()
+        for i in range(n):
+            if indegree[i]==0:
+                queue.append(i)
+            dp[i][ord(colors[i])-ord('a')]=1
+        visited=0
+        maxColor=0
+        while queue:
+            node=queue.popleft()
+            visited+=1
+            for neighbor in adj[node]:
+                for c in range(26):
+                    inc=1 if ord(colors[neighbor])-ord('a')==c else 0
+                    dp[neighbor][c]=max(dp[neighbor][c],dp[node][c]+inc)
+                indegree[neighbor]-=1
+                if indegree[neighbor]==0:
+                    queue.append(neighbor)
+            maxColor=max(maxColor,max(dp[node]))
+        return maxColor if visited==n else -1
