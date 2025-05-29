@@ -1,0 +1,60 @@
+"""
+Problem:
+Given two trees represented as edge lists (edges1 and edges2), determine for each node in the first tree whether it is at even or odd depth (starting from root 0), and based on that, return a list where each element is the maximum number of target nodes (from tree 2) that can be matched under certain parity rules.
+
+Functionality:
+1. Build adjacency lists for both trees from edge lists.
+2. Perform DFS on the second tree (edges2) to count how many nodes are at even depth.
+   - This helps determine which parity (even/odd) has more nodes in tree2 for optimal matching.
+3. Perform DFS on the first tree (edges1) to mark nodes as at even or odd depth, and count how many are at even depth.
+4. Use this parity information to calculate the maximum number of target nodes each node in tree1 can be matched to.
+   - If a node in tree1 is at even depth, we assume it can match with the maximum parity group (even/odd) of tree2.
+
+Return:
+A list of size `n` (number of nodes in tree1), where each entry represents the maximum number of target nodes from tree2 that can be matched if the corresponding node in tree1 is chosen.
+
+Time Complexity:
+  - Building adjacency lists: O(n + m)
+  - DFS traversals: O(n + m)
+  - Final list computation: O(n)
+  - Overall: O(n + m), where n = len(edges1) + 1, m = len(edges2) + 1
+
+Space Complexity:
+  - Adjacency lists: O(n + m)
+  - mod2 list for storing parity info: O(n)
+  - Recursion stack for DFS: O(n + m) in worst case (tree depth)
+  - Overall: O(n + m)
+"""
+
+class Solution:
+    def maxTargetNodes(self, edges1: List[List[int]], edges2: List[List[int]]) -> List[int]:
+        n,m=len(edges1)+1,len(edges2)+1
+        adj1=[[] for _ in range(n)]
+        adj2=[[] for _ in range(m)]
+        mod2=[False]*n
+        def build_adj(edges, adj):
+            for u,v in edges:
+                adj[u].append(v)
+                adj[v].append(u)
+        def dfs(i, parent, isEven, adj):
+            cnt=isEven
+            mod2[i]=isEven
+            for j in adj[i]:
+                if j==parent:
+                    continue
+                cnt+=dfs(j, i, not isEven, adj)
+            return cnt
+        def dfs0(i, parent, isEven, adj):
+            cnt=isEven
+            for j in adj[i]:
+                if j==parent:
+                    continue
+                cnt+=dfs0(j, i, not isEven, adj)
+            return cnt
+        build_adj(edges1, adj1)
+        build_adj(edges2, adj2)
+        y=dfs0(0, -1, True, adj2)
+        x=dfs(0, -1, True, adj1)
+        cnt2=max(y,m-y)
+        cnt=((n-x)+cnt2,x+cnt2)
+        return [cnt[b] for b in mod2]
