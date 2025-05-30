@@ -1,0 +1,48 @@
+"""
+Problem:
+Given a directed graph where `edges[i]` represents a node that node `i` points to (-1 if no outgoing edge), and two starting nodes `node1` and `node2`, 
+find the node that is reachable from both nodes such that the maximum distance from either `node1` or `node2` to that node is minimized. If there are multiple such nodes, 
+return the one with the smallest index.
+
+Approach:
+1. Perform BFS-like traversal (but in a linear fashion due to the graph being like a chain) 
+   from both node1 and node2 using `getDistances` to calculate the distance of each node from node1 and node2 respectively.
+2. Iterate through all nodes and for each node that is reachable from both node1 and node2, compute the maximum of the two distances.
+3. Track the node with the smallest such maximum distance. If multiple nodes have the same minimal max distance, choose the one with the smallest index.
+4. Return the chosen node index. If no such node exists, return -1.
+
+Functions:
+- `getDistances(edges, start)`: Returns a list where the i-th index contains the shortest distance from the start node to node i. If a node is unreachable, the value remains -1.
+
+Time Complexity:
+- O(n) for each call to `getDistances` => O(n) + O(n) = O(n)
+- O(n) to iterate through all nodes to find the minimum max distance
+- Total: **O(n)** where n is the number of nodes in the graph.
+
+Space Complexity:
+- O(n) for `dist1` and O(n) for `dist2` => total: **O(n)**
+- No extra space used except these arrays and loop variables.
+"""
+
+class Solution:
+    def closestMeetingNode(self, edges, node1, node2):
+        dist1=self.getDistances(edges,node1)
+        dist2=self.getDistances(edges,node2)
+        result=-1
+        minDistance=float('inf')
+        for i in range(len(edges)):
+            if dist1[i]!=-1 and dist2[i]!=-1:
+                maxDist=max(dist1[i],dist2[i])
+                if maxDist<minDistance:
+                    minDistance=maxDist
+                    result=i
+        return result
+    def getDistances(self, edges, start):
+        n=len(edges)
+        dist=[-1]*n
+        d=0
+        while start!=-1 and dist[start]==-1:
+            dist[start]=d
+            d+=1
+            start=edges[start]
+        return dist
