@@ -1,0 +1,54 @@
+"""
+This code solves the Snakes and Ladders problem using Breadth-First Search (BFS).
+
+Problem Description:
+- Given a square game board represented as a 2D array `board`, the player starts at cell 1 and wants to reach cell n*n.
+- Some cells have snakes or ladders that change the destination when landed on (board[i][j] != -1).
+- Each move consists of rolling a 6-sided die (values 1–6), and the player moves accordingly.
+
+Algorithm Explanation:
+1. The board is linearized using a helper function `get_pos(num)` that maps the number (1 to n*n) to the correct 2D position on the board considering the zigzag (boustrophedon) layout.
+2. Breadth-First Search (BFS) is performed from cell 1 using a queue.
+3. At each level (number of moves), all positions reachable by rolling a die (1 to 6) are evaluated.
+4. If a ladder or snake is present at the destination, the player moves to the new destination directly.
+5. The process continues until reaching cell n*n, returning the minimum number of moves required.
+6. If the end is not reachable, returns -1.
+
+Time Complexity: O(n^2)
+- In the worst case, we may visit every cell once. For each cell, we try up to 6 neighbors (constant), so overall complexity is O(n^2).
+
+Space Complexity: O(n^2)
+- The `visited` list uses O(n^2) space to track visited cells.
+- The BFS queue also stores up to O(n^2) elements in the worst case.
+"""
+
+from collections import deque
+class Solution:
+    def snakesAndLadders(self, board):
+        n=len(board)
+        def get_pos(num):
+            r,c=divmod(num-1,n)
+            if r%2==0:
+                return (n-1-r,c)
+            return (n-1-r,n-1-c)
+        visited=[False]*(n*n+1)
+        q=deque([1])
+        visited[1]=True
+        moves=0
+        while q:
+            for _ in range(len(q)):
+                curr=q.popleft()
+                if curr==n*n:
+                    return moves
+                for i in range(1,7):
+                    nxt=curr+i
+                    if nxt>n*n:
+                        continue
+                    r,c=get_pos(nxt)
+                    if board[r][c]!=-1:
+                        nxt=board[r][c]
+                    if not visited[nxt]:
+                        visited[nxt]=True
+                        q.append(nxt)
+            moves+=1
+        return -1
