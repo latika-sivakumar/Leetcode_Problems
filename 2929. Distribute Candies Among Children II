@@ -1,0 +1,38 @@
+"""
+This solution solves the problem of counting the number of ways to distribute 'n' candies to 3 children such that each child receives at most 'limit' candies.
+
+Core Idea:
+We use the Inclusion-Exclusion Principle (IEP) to count valid distributions where each child gets between 0 and 'limit' candies.
+
+Let:
+- comb(a, b) be the combination function (number of ways to choose b items from a).
+- Total unrestricted ways to give n candies to 3 children is comb(n+2, 2).
+- We subtract cases where 1 or more children get more than 'limit' candies using IEP.
+
+Steps:
+1. Loop over k from 0 to 3 (number of children exceeding the limit).
+2. For each k, calculate the over-limit adjustment: val = n - k * (limit + 1).
+3. If val < 0, skip this k (not possible).
+4. Use Inclusion-Exclusion sign = (-1)^k.
+5. Count ways = comb(3, k) * comb(val + 2, 2), and update total using the sign.
+
+Time Complexity:
+- O(1), because the loop runs a constant 4 times regardless of input size.
+
+Space Complexity:
+- O(1), no additional space proportional to input is used.
+"""
+
+class Solution:
+    def count_ways(self, n, limit):
+        total=0
+        for k in range(4):  
+            val=n-k*(limit+1)
+            if val<0:
+                continue
+            sign=(-1)**k
+            ways=comb(3,k)*comb(val+2,2)
+            total+=sign*ways
+        return total
+    def distributeCandies(self, n: int, limit: int) -> int:
+        return self.count_ways(n,limit)
