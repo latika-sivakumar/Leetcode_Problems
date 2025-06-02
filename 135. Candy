@@ -1,0 +1,28 @@
+# Given a list of ratings for children, distribute candies such that:
+# 1. Each child gets at least one candy.
+# 2. Children with a higher rating than their immediate neighbors get more candies.
+
+# This solution uses two passes:
+# - Left to right: ensure increasing ratings get more candies than the left neighbor.
+# - Right to left: ensure decreasing ratings get more candies than the right neighbor.
+
+# Returned:
+# The result is the total minimum candies required to satisfy both rules.
+
+# Time Complexity: O(n)
+# - Two linear passes through the ratings list.
+
+# Space Complexity: O(n)
+# - An extra array `candies` of size n is used to track candy count per child.
+
+class Solution(object):
+    def candy(self, ratings):
+        n=len(ratings)
+        candies=[1]*n  
+        for i in range(1,n):
+            if ratings[i]>ratings[i-1]:
+                candies[i]=candies[i-1]+1
+        for i in range(n-2,-1,-1):
+            if ratings[i]>ratings[i+1]:
+                candies[i]=max(candies[i],candies[i+1]+1)
+        return sum(candies)
