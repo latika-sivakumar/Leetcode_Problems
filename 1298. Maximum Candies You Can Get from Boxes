@@ -1,0 +1,54 @@
+# This function calculates the maximum number of candies that can be collected starting from a given set of boxes.
+# Each box may contain candies, keys to other boxes, and other boxes.
+# A box can be opened if we have its key or it is already open.
+# The algorithm explores all accessible boxes by:
+#   - Using keys found in currently open boxes to open more boxes.
+#   - Collecting candies from opened boxes.
+#   - Repeating the process until no more boxes can be accessed.
+
+# Algorithm Steps:
+# 1. Initialize a deque for BFS-style traversal of boxes.
+# 2. Add all initial boxes (`curBoxes`) to the deque:
+#    - If a box is already open, process it immediately by putting it at the front.
+#    - If a box is closed, put it at the back.
+# 3. While there are boxes to process:
+#    - If a box is closed (stat[ind] == 0), skip it.
+#    - If a box is open, collect candies, update available keys, and explore any contained boxes.
+# 4. Continue until all accessible boxes are processed.
+
+# Time Complexity: O(N + K + B)
+#   - N = total number of boxes
+#   - K = total number of keys
+#   - B = total number of contained boxes
+#   - Each box, key, and contained box is processed at most once.
+
+# Space Complexity: O(N + K + B)
+#   - Space is used by the deque and the updated `stat` list.
+#   - Additional space is used to hold the `keys`, `containedBoxes`, and input arrays.
+
+from collections import deque
+class Solution:
+    def maxCandies(self, stat, choco, keys, containedBoxes, curBoxes):
+        dq=deque()
+        for box_ind in curBoxes:
+            for key in keys[box_ind]:
+                stat[key]=1
+            if stat[box_ind]==0:
+                dq.append(box_ind)
+            else:
+                dq.appendleft(box_ind)
+        ans=0
+        while dq:
+            ind=dq.popleft()
+            if stat[ind]==0:
+                break
+            elif stat[ind]==1:
+                ans+=choco[ind]
+                for key in keys[ind]:
+                    stat[key]=1
+            for new_box_ind in containedBoxes[ind]:
+                if stat[new_box_ind]==0:
+                    dq.append(new_box_ind)
+                else:
+                    dq.appendleft(new_box_ind)
+        return ans
