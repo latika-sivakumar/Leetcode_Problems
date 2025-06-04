@@ -1,0 +1,20 @@
+# This function returns the lexicographically largest substring of length (len(word) - n + 1)
+# from the input string `word`, based on a given integer `n`.
+# If n == 1, it returns the entire string as all substrings will be of length len(word).
+# Otherwise, it checks all substrings of the derived length and returns the maximum.
+
+# Time Complexity: O(m * (len(word) - m + 1))
+#   - where m = len(word) - n + 1
+#   - We generate (len(word) - m + 1) substrings of length m
+#   - Each substring comparison takes O(m) in the worst case
+
+# Space Complexity: O(m)
+#   - Only the largest substring (of length m) is stored for the result.
+#   - Additional space used during list comprehension is not stored if generator is used.
+
+class Solution:
+    def answerString(self, word: str, n: int) -> str:
+        m=len(word)-n+1 
+        if n==1:  
+            return word
+        return max(word[i:i+m] for i in range(len(word)))
