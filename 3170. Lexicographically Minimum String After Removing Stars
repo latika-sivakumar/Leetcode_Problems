@@ -1,0 +1,30 @@
+# This function removes characters from a string based on a specific rule using a min-heap.
+# Problem Logic:
+# - Given a string `s` containing lowercase letters and asterisks '*'.
+# - Every time a '*' is encountered, remove it and the smallest character (lexicographically) that appears before it.
+# Approach:
+# - Use a min-heap (priority queue) to efficiently track the smallest character seen so far.
+# - Use a defaultdict of deques to map characters to their indices for quick removal.
+# - Maintain a `keep` list to mark which characters should be included in the final string.
+
+# Time Complexity: O(n log n), where n is the length of the string (due to heap operations).
+# Space Complexity: O(n), for storing indices and heap elements.
+
+import heapq
+from collections import defaultdict,deque
+class Solution(object):
+    def clearStars(self, s):
+        n=len(s)
+        pq=[] 
+        m=defaultdict(deque)  
+        keep=[True]*n  
+        for i in range(n):
+            if s[i]=='*':
+                smallest=heapq.heappop(pq)  
+                idx=m[smallest].pop()      
+                keep[i]=False              
+                keep[idx]=False           
+            else:
+                heapq.heappush(pq,s[i])
+                m[s[i]].append(i)
+        return ''.join(s[i] for i in range(n) if keep[i])
