@@ -1,0 +1,34 @@
+# This function simulates a robot that processes a string to produce the lexicographically smallest possible output.
+# Problem Logic:
+# - The robot can push characters from input string `s` to a stack.
+# - At any point, it can also pop characters from the stack to append to the result string.
+# - The goal is to create the smallest lexicographical string using these operations.
+# Approach:
+# - Use a `Counter` to keep track of remaining frequencies of characters in `s`.
+# - Use a stack to simulate characters being held temporarily.
+# - At each step, push the current character onto the stack and decrement its frequency.
+# - Then, pop from the stack to the result as long as the top of the stack is less than or equal to the smallest character still remaining in the input (determined using `min_char` helper).
+
+# Time Complexity: O(n * 26) ≈ O(n), where n is the length of the string (`min_char` is called at most n times, each takes max 26 steps).
+# Space Complexity: O(n), for the stack and result storage.
+
+from collections import Counter
+class Solution(object):
+    def robotWithString(self, s):
+        freq=Counter(s)
+        st=[]
+        res=[]
+        def min_char(freq):
+            for i in range(26):
+                ch=chr(ord('a')+i)
+                if freq[ch]>0:
+                    return ch
+            return 'a'
+        for ch in s:
+            st.append(ch)
+            freq[ch]-=1
+            while st and st[-1]<=min_char(freq):
+                res.append(st.pop())
+        while st:
+            res.append(st.pop())
+        return ''.join(res)
