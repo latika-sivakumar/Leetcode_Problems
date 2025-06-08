@@ -1,0 +1,26 @@
+# This solution generates all integers from 1 to n in lexicographical (dictionary) order.
+# It performs a DFS (depth-first search) traversal by treating numbers as nodes in a tree,
+# where each node branches into ten children by appending digits 0–9.
+# Starting from 1 to 9, it recursively appends digits and adds valid numbers to the result list.
+
+# Time Complexity: O(n)
+# Each number from 1 to n is visited exactly once and added to the result list.
+
+# Space Complexity: O(log n)
+# This is the maximum depth of the recursion stack, which is proportional to the number of digits in n.
+# Additionally, the output list stores n elements.
+
+class Solution:
+    def lexicalOrder(self, n: int) -> list[int]:
+        self.ans=[]
+        def solve(i):
+            if i>n:
+                return
+            cur=i 
+            self.ans.append(cur)
+            for i in range(10):
+                tmp=str(cur)+str(i) 
+                solve(int(tmp))
+        for i in range(1,10):
+            solve(i)
+        return self.ans
