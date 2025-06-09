@@ -1,0 +1,38 @@
+# This code finds the k-th smallest number in lexicographical order within the range [1, n].
+# It uses a prefix-based tree traversal (like a Trie or lexicographical tree), without actually building the tree.
+# The `steps(curr, nxt)` function counts how many numbers exist in the prefix range [curr, nxt) within [1, n].
+# Based on the number of steps (or nodes) in that prefix range, the algorithm decides whether to:
+#   - Move to the next sibling (curr + 1) if the whole subtree can be skipped.
+#   - Move to the next child (curr * 10) if we need to go deeper to reach the k-th number.
+# This ensures the k-th number in lexicographic order is reached efficiently.
+
+# Time Complexity:
+# O(log n * log n)
+#   - Each call to `steps()` goes roughly log(n) levels deep (since we multiply curr by 10).
+#   - The outer loop runs up to log(n) times as we navigate through prefixes.
+#   - Thus, total complexity is O((log n)^2) in the worst case.
+
+# Space Complexity:
+# O(1) — constant extra space is used.
+# No recursion, no additional data structures beyond a few integer variables.
+
+class Solution:
+    def findKthNumber(self, n: int, k: int) -> int:
+        def steps(curr, nxt):
+            cnt=0
+            while curr<=n:
+                cnt+=min(n+1,nxt)-curr
+                curr*=10
+                nxt*=10
+            return cnt
+        curr=1
+        k-=1 
+        while k:
+            cnt=steps(curr,curr+1)
+            if cnt<=k:
+                curr+=1
+                k-=cnt
+            else:
+                curr*=10
+                k-=1
+        return curr
