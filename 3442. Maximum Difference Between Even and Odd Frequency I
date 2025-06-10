@@ -1,0 +1,26 @@
+# This function computes the maximum difference between the highest odd frequency and the lowest even frequency of characters in a given string `s`.
+# Steps:
+# - Count the frequency of each character using Counter.
+# - Traverse the frequencies:
+#     - Track the maximum frequency among characters with odd counts.
+#     - Track the minimum frequency among characters with even counts.
+# - Return the difference: (max odd frequency - min even frequency).
+
+# Time Complexity:
+# O(n), where n is the length of the string `s` — for counting frequencies and iterating over them.
+
+# Space Complexity:
+# O(1) — since there are at most 26 lowercase English letters, the Counter and frequency tracking use constant space.
+
+from collections import Counter
+class Solution:
+    def maxDifference(self, s: str) -> int:
+        freq=Counter(s)
+        odd_freq=float("-inf")
+        even_freq=float("inf")
+        for char,count in freq.items():
+            if count%2!=0:
+                odd_freq=max(odd_freq,count)
+            else:
+                even_freq=min(even_freq,count)
+        return odd_freq-even_freq
