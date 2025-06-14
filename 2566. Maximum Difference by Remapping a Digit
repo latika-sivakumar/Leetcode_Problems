@@ -1,0 +1,26 @@
+# This function computes the maximum difference between two numbers formed by replacing all occurrences of one digit in the original number:
+# - `max_s`: created by replacing the first digit that is not '9' with '9' throughout the string to get the largest possible number.
+# - `min_s`: created by replacing the first digit that is not '0' with '0' throughout the string to get the smallest possible number.
+# - The function returns the difference between the integer values of `max_s` and `min_s`.
+
+# Time Complexity:
+# O(n), where n is the number of digits in the input number.
+# - `.replace()` traverses the entire string, and the loop may break early after one pass.
+
+# Space Complexity:
+# O(n), for the string representation of the number and its modified versions (`max_s`, `min_s`).
+
+class Solution:
+    def minMaxDifference(self, num: int) -> int:
+        s=str(num)
+        max_s=s
+        for ch in s:
+            if ch!='9':
+                max_s=s.replace(ch,'9')
+                break
+        min_s=s
+        for ch in s:
+            if ch!='0':
+                min_s=s.replace(ch,'0')
+                break
+        return int(max_s)-int(min_s)
