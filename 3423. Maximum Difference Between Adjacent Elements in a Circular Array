@@ -1,0 +1,24 @@
+# This function calculates the **maximum absolute difference between adjacent elements** in a circular list `nums`.
+# - "Circular" means the last element is also considered adjacent to the first.
+# - The loop compares each element `nums[i]` with `nums[i+1]`, and wraps around at the end using a counter that resets to 0.
+# - It returns the maximum value of |nums[i] - nums[i+1]| for all adjacent pairs, including the circular pair (last, first).
+
+# Time Complexity:
+# O(n), where n is the number of elements in `nums`.
+# - Each adjacent pair is checked once.
+
+# Space Complexity:
+# O(1), only a few variables (`diff`, `counter`, `temp`) are used.
+
+class Solution(object):
+    def maxAdjacentDistance(self, nums):
+        diff=0
+        counter=1
+        for i in range(len(nums)):
+            if counter==len(nums):
+                counter=0
+            temp=abs(nums[i]-nums[counter])
+            if temp>diff:
+                diff=temp      
+            counter+=1
+        return diff
