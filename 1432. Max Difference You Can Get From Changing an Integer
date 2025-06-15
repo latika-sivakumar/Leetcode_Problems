@@ -1,0 +1,38 @@
+# This function computes the **maximum difference** between two numbers formed by digit replacement on the input `num`.
+# - To form the **maximum number** (`max_s`):
+#     - Replace the first non-'9' digit in the number with '9' **in all its occurrences**.
+# - To form the **minimum number** (`min_s`):
+#     - If the first digit is not '1', replace all its occurrences with '1'.
+#     - Otherwise, find the first digit (not at index 0) that is neither '0' nor '1', and replace all its occurrences with '0'.
+#     - If all digits are already '1' or '0', no replacement is made.
+# The function returns the difference: `max_num - min_num`.
+
+# Time Complexity:
+# O(n), where n is the number of digits in the number.
+# - Conversions and replacements are linear with respect to digit count.
+
+# Space Complexity:
+# O(n), for storing string/list representations and intermediate results (`s`, `max_s`, `min_s`).
+
+class Solution:
+    def maxDiff(self, num: int) -> int:
+        s=list(str(num))
+        for d in s:
+            if d!='9':
+                max_s=''.join('9' if c==d else c for c in s)
+                break
+        else:
+            max_s=''.join(s)
+        if s[0]!='1':
+            d=s[0]
+            min_s=''.join('1' if c==d else c for c in s)
+        else:
+            for d in s[1:]:
+                if d!='0' and d!='1':
+                    min_s=''.join('0' if c==d else c for c in s)
+                    break
+            else:
+                min_s=''.join(s)
+        max_num=int(max_s)
+        min_num=int(min_s)
+        return max_num-min_num
