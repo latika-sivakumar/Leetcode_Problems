@@ -1,0 +1,36 @@
+# This function counts the number of **"good arrays"** of length `n`, using integers from `1` to `m`, with **exactly `k` positions** (excluding the first) where the current element is **not equal** to the previous one.
+# In other words, there are `k` changes and `(n - 1 - k)` same-value continuations from the previous element.
+
+# The count is calculated as:
+#   - Choose `k` positions from the `n-1` transitions: C(n-1, k)
+#   - First element can be any of `m` choices.
+#   - For each of the `k` change positions, choose a different value than previous: (m-1)^k
+#   - For remaining (n - 1 - k) positions, the value must match previous — fixed.
+
+# Final formula:
+#   count = m * C(n-1, k) * (m-1)^(n - 1 - k) % mod
+
+# Time Complexity:
+# O(n), for:
+#   - Precomputing factorials and inverse factorials.
+#   - Computing binomial coefficient C(n-1, k).
+
+# Space Complexity:
+# O(n), for:
+#   - Arrays `fac` and `inv` storing factorials and modular inverses up to (n-1).
+
+class Solution:
+    def countGoodArrays(self, n: int, m: int, k: int) -> int:
+        def comb(a, b):
+            return fac[a]*inv[b]%mod*inv[a-b]%mod if 0<= b<=a else 0
+        mod=10**9+7
+        if k>n-1:
+            return 0
+        fac=[1]*n
+        for i in range(1,n):
+            fac[i]=fac[i-1]*i%mod
+        inv=[1]*n
+        inv[n-1]=pow(fac[n-1],mod-2,mod)
+        for i in range(n-1,0,-1):
+            inv[i-1]=inv[i]*i%mod
+        return m*comb(n-1,k)%mod*pow(m-1,n-1-k,mod)%mod
