@@ -1,0 +1,24 @@
+# This function attempts to divide the input list `nums` into groups of 3 elements each,
+# such that for every group `[a, b, c]`, the maximum difference between any two elements is ≤ `k`.
+# - It first sorts the array to make grouping consecutive triples easier.
+# - It then iterates through the array in steps of 3, checking if the difference between the first and third
+#   elements in each group exceeds `k`.
+# - If any group violates the condition, it returns an empty list.
+# - Otherwise, it returns a list of all valid 3-element groups.
+
+# Time Complexity:
+# O(n log n), due to the initial sort.
+# - Group checking and appending take O(n) time, where n = length of `nums`.
+
+# Space Complexity:
+# O(n), for storing the result `ans` containing n/3 groups (in worst case).
+
+class Solution:
+    def divideArray(self, nums: List[int], k: int) -> List[List[int]]:
+        nums.sort()
+        ans=[]
+        for i in range(0,len(nums)-2,3):
+            if nums[i+2]-nums[i]>k:
+                return []
+            ans.append(nums[i:i+3])
+        return ans
