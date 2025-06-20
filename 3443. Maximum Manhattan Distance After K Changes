@@ -1,0 +1,38 @@
+# This function computes the maximum possible Manhattan distance you can achieve from the starting point
+# after following a sequence of moves (`N`, `S`, `E`, `W`) represented by the input string `s`.
+# You are allowed to make up to `k` changes to the moves (such as replacing a direction), which can potentially increase the final distance.
+
+# At each position:
+# - It maintains counts for moves towards North, South, East, and West.
+# - It computes the net displacement in both directions.
+# - The resulting Manhattan Distance (MD) is calculated as `abs(north-south) + abs(east-west)`.
+# - The maximum achievable distance at any point is adjusted with the available changes (`k`), yielding:
+#       dis = MD + min(2*k, steps_left_for_changes).
+
+# Time Complexity:
+# O(n), where n = length of the input string `s`.
+# The function iteratively processes every character exactly once.
+
+# Space Complexity:
+# O(1), as only a fixed number of integer variables are used.
+
+class Solution:
+    def maxDistance(self, s: str, k: int) -> int:
+        ans=0
+        north=south=east=west=0
+        for i in range(len(s)):
+            c=s[i]
+            if c=='N':
+                north+=1
+            elif c=='S':
+                south+=1
+            elif c=='E':
+                east+=1
+            elif c=='W':
+                west+=1
+            x=abs(north-south)
+            y=abs(east-west)
+            MD=x+y
+            dis=MD+min(2*k,i+1-MD)
+            ans=max(ans,dis)
+        return ans
