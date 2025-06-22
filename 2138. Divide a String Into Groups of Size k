@@ -1,0 +1,22 @@
+# This function divides the input string `s` into substrings (chunks) of size `k`.
+# - If the last chunk is smaller than `k`, it is filled with the character `fill` until its length is `k`.
+# - The function returns a list of all such chunks.
+
+# Time Complexity:
+# O(n), where n is the length of the string `s`.
+# - The loop processes the string in steps of size `k`, so each character is visited once.
+
+# Space Complexity:
+# O(n), for storing the result list containing (n + k - 1) // k chunks, and any temporary string slices.
+
+class Solution:
+    def divideString(self, s: str, k: int, fill: str) -> list[str]:
+        result=[]  
+        i=0
+        while i<len(s):
+            chunk=s[i:i+k]
+            if len(chunk)<k:
+                chunk+=fill*(k-len(chunk))
+            result.append(chunk)
+            i+=k
+        return result
