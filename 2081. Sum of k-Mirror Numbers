@@ -1,0 +1,60 @@
+# This function computes the sum of the first `n` positive integers that are palindromes in both base-10 and base-`k`.
+# - The algorithm generates decimal palindromes in increasing order of length.
+# - For each palindrome:
+#     - It checks if the number is also a palindrome in base-`k` using the `palindrome` method.
+#     - If it is, it adds it to the total and decreases the count `n`.
+# - It continues generating palindromes until `n` such k-mirror numbers are found.
+
+# Helper methods:
+# - `isPalindrome(mid, odd)`: Constructs a decimal palindrome from a given mid part (even or odd length).
+# - `reverse(x)`: Reverses the decimal digits of `x`.
+# - `palindrome(x, k)`: Checks if `x` is a palindrome in base `k`.
+
+# Time Complexity:
+# O(N * L * log_k(M)), where:
+# - N = number of k-mirror numbers to find.
+# - L = average length of decimal palindromes generated.
+# - M = largest decimal palindrome considered (since converting to base k takes log_k(M) time).
+# Generating and checking each palindrome is efficient, but depends on the density of k-mirror numbers.
+
+# Space Complexity:
+# O(L + log_k(M)), where:
+# - L = for storing decimal digits.
+# - log_k(M) = for storing base-k digits of the number being checked.
+
+class Solution:
+    digit = [0] * 64
+    def palindrome(self, x: int , k : int) -> bool:
+        digit = []
+        while x > 0:
+            digit.append(x % k)
+            x //= k
+        return digit == digit[::-1]
+
+    def isPalindrome(self, mid: int, odd: bool) -> int:
+        if odd:
+            return mid * (10 ** (len(str(mid)) - 1)) + self.reverse(mid // 10)
+        else:
+            return mid * (10 ** len(str(mid))) + self.reverse(mid)
+
+    def reverse(self, x: int) -> int:
+        res = 0
+        while x > 0:
+            res = res * 10 + x % 10
+            x //= 10
+        return res
+
+    def kMirror(self, k: int, n: int) -> int:
+        total = 0
+        length = 1
+        while True:
+            mid = (length + 1) // 2
+            start = 10 ** (mid - 1)
+            for i in range(start, 10 ** mid):
+                pal = self.isPalindrome(i, length % 2 == 1)
+                if self.palindrome(pal, k):
+                    total += pal
+                    n -= 1
+                    if n == 0:
+                        return total
+            length += 1
