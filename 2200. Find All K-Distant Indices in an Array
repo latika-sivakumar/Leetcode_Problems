@@ -1,0 +1,28 @@
+# This function finds all indices `j` in the list `nums` where:
+#   - There exists at least one occurrence of `key` at index `i`
+#   - Such that |i - j| <= k
+
+# - Iterates through `nums` to locate indices where `nums[i] == key`.
+# - For each such `i`, adds all indices `l` to a set where |i - l| <= k.
+# - Returns the result as a list of unique indices.
+
+# Time Complexity:
+# O(n), where n is the length of `nums`.
+# - In the worst case, each index is visited a constant number of times because `l` only moves forward.
+
+# Space Complexity:
+# O(n), for storing indices in the result set.
+
+class Solution:
+    def findKDistantIndices(self, nums: List[int], key: int, k: int) -> List[int]:
+        n=len(nums)
+        re=set()
+        l=0
+        for i in range(n):
+            if nums[i]==key:
+                while abs(l-i)>k and l<n:
+                    l+=1
+                while abs(l-i)<=k and l<n:
+                    re.add(l)
+                    l+=1
+        return list(re)
