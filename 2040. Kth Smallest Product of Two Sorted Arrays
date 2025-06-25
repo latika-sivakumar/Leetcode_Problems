@@ -1,0 +1,48 @@
+# This function finds the k-th smallest product of pairs (nums1[i] * nums2[j]) where nums1[i] ∈ nums1 and nums2[j] ∈ nums2.
+
+# Approach:
+# - Sort both nums1 and nums2.
+# - Use binary search on the possible product value range to find the smallest product `x`
+#   such that there are at least `k` pairs with product <= x.
+# - The helper `count_pairs(x)` counts how many pairs have product <= x:
+#   - For a > 0: use bisect_right to find how many nums2 elements fit x // a.
+#   - For a < 0: use bisect_left on the reversed logic because multiplying negatives.
+#   - For a == 0: all products are 0; if x >= 0, count all pairs.
+
+# Time Complexity:
+# O((m + n) * log(maxV) * log n), where:
+# - m = len(nums1), n = len(nums2)
+# - maxV = value range between min and max product (~1e10)
+# - log n comes from binary search in nums2 during count_pairs.
+
+# Space Complexity:
+# O(1) extra space (besides input storage and sorting),
+# since we only use a few integer variables and binary search helpers.
+
+class Solution:
+    def kthSmallestProduct(self, nums1: List[int], nums2: List[int], k: int) -> int:
+        nums1.sort()
+        nums2.sort()
+        def count_pairs(x: int) -> int:
+            count=0
+            for a in nums1:
+                if a>0:
+                    count+=bisect.bisect_right(nums2,x//a)
+                elif a<0:
+                    target=x//a
+                    if x%a!=0:
+                        target+=1
+                    count+=len(nums2)-bisect.bisect_left(nums2,target)
+                else:
+                    if x>=0:
+                        count+=len(nums2)  
+            return count
+        low=-10**10
+        high=10**10
+        while low<high:
+            mid=(low+high)//2
+            if count_pairs(mid)<k:
+                low=mid+1
+            else:
+                high=mid
+        return low
