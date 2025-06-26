@@ -1,0 +1,33 @@
+# This function finds the length of the longest subsequence of `s` (a binary string) that represents a number ≤ `k`.
+
+# Approach:
+# - Always include all '0's because they contribute nothing to the value.
+# - For '1's, process from least significant bit (rightmost) to most significant:
+#     - Add '1' to the subsequence if including it keeps the total value ≤ k.
+#     - Keep track of the running value using powers of 2.
+# - Stop early if the next power of 2 exceeds k (since further '1's can't help without exceeding k).
+
+# Time Complexity:
+# O(n), where n is the length of `s`.
+# - Single pass over the string (right to left).
+
+# Space Complexity:
+# O(1), uses a fixed number of integer variables.
+
+class Solution:
+    def longestSubsequence(self, s: str, k: int) -> int:
+        n=len(s)
+        zeros=s.count('0')
+        ones=0
+        value=0
+        power=1
+        for i in range(n-1,-1,-1):
+            if s[i]=='1':
+                if value+power>k:
+                    continue
+                value+=power
+                ones+=1
+            power<<=1
+            if power>k:
+                break
+        return zeros+ones
