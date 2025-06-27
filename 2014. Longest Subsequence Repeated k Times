@@ -1,0 +1,42 @@
+# This function finds the **longest subsequence** of string `s` that can be repeated exactly `k` times as a subsequence of `s`.
+
+# Approach:
+# - Uses **Breadth-First Search (BFS)** to generate all possible subsequences in lexicographical order.
+# - For each candidate subsequence `nxt`, check if it appears at least `k` times in `s` using `isK()`:
+#     - The `isK()` function simulates matching the `sub` string in `s` repeatedly and counts how many times it matches.
+#     - It returns True as soon as `sub` is matched `k` times.
+# - Update `res` when a valid subsequence is found.
+# - BFS ensures that the longest valid subsequence (in lexicographical order) is the last valid one seen.
+
+# Time Complexity:
+# The worst-case time is exponential:
+# - BFS generates O(26^L) candidates where L is the max subsequence length (but pruning helps).
+# - Each `isK()` call takes O(len(s)) time.
+# In practice, the constraints on `s` (typically <= 1000 chars) limit actual runtime.
+
+# Space Complexity:
+# O(26^L) in the worst case for BFS queue and string storage (L is the max length of a repeated subsequence).
+
+class Solution:
+    def longestSubsequenceRepeatedK(self, s: str, k: int) -> str:
+        def isK(sub:str,t:str,k:int)->bool:
+            count=i=0
+            for ch in t:
+                if i<len(sub) and ch==sub[i]:
+                    i+=1
+                    if i==len(sub):
+                        i=0
+                        count+=1
+                        if count==k:
+                            return True
+            return False
+        res=""
+        q=deque([""])
+        while q:
+            curr=q.popleft()
+            for ch in map(chr, range(ord('a'),ord('z')+1)):
+                nxt=curr+ch
+                if isK(nxt,s,k):
+                    res=nxt
+                    q.append(nxt)
+        return res
