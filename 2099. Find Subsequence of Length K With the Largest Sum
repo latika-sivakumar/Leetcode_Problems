@@ -1,0 +1,24 @@
+# This function returns the subsequence of length `k` with the **maximum possible sum** from the input list `nums`.
+# - A subsequence must maintain the **original order** of elements.
+# 
+# Approach:
+# - Store each element with its original index: (value, index).
+# - Sort the list in descending order of value to find the top `k` elements with the largest values.
+# - Among these top `k` elements, sort them by original index to maintain the order of the original array.
+# - Extract and return only the values (in the correct order) from the sorted list.
+
+# Time Complexity:
+# O(n log n), where n is the length of `nums`:
+# - First sort by value: O(n log n)
+# - Then sort top `k` items by index: O(k log k)
+
+# Space Complexity:
+# O(n), for storing the list of (value, index) pairs.
+
+class Solution:
+    def maxSubsequence(self, nums: List[int], k: int) -> List[int]:
+        ind=[(val,i) for i,val in enumerate(nums)]
+        ind.sort(key=lambda x:-x[0])
+        ind_re=ind[:k]
+        ind_re.sort(key=lambda x:x[1])
+        return [val for val,i in ind_re]
