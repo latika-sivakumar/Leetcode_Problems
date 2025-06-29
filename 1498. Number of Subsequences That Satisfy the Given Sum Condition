@@ -1,0 +1,36 @@
+# This function returns the number of **non-empty subsequences** in `nums` such that the sum of the minimum and maximum elements in the subsequence is less than or equal to `target`.
+
+# Approach:
+# - Sort the array to allow two-pointer technique.
+# - Precompute powers of 2 modulo 1e9+7 since for a valid range [left, right], there are 2^(right-left) subsequences.
+# - Use two pointers:
+#     - If nums[left] + nums[right] <= target, all subsequences between left and right are valid.
+#     - Add 2^(right - left) to result and move left pointer.
+#     - Else, move right pointer to reduce the sum.
+
+# Time Complexity:
+# O(n log n), where n is the length of `nums`.
+# - Sorting takes O(n log n)
+# - Two-pointer traversal is O(n)
+
+# Space Complexity:
+# O(n), for the power array used to precompute powers of 2 modulo 1e9+7.
+
+class Solution:
+    def numSubseq(self, nums, target):
+        mod=10**9+7
+        nums.sort()
+        n=len(nums)
+        power=[1]*n
+        for i in range(1,n):
+            power[i]=(power[i-1]*2)%mod
+
+        left,right=0,n-1
+        result=0
+        while left<=right:
+            if nums[left]+nums[right]<=target:
+                result=(result+power[right-left])%mod
+                left+=1
+            else:
+                right-=1
+        return result
