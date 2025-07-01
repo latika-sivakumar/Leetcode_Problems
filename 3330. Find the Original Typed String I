@@ -1,0 +1,24 @@
+# This function counts how many positions in the string `word` do **not** have a change in adjacent characters.
+# - Starts with `j = len(word)` (i.e., total characters).
+# - Iterates from index 1 to the end:
+#     - If `word[i] != word[i-1]`, there is a character change, so it subtracts 1 from `j`.
+# - The final value of `j` represents the number of characters that are either:
+#     - The first character, or
+#     - Equal to their previous character.
+# 
+# In other words, it returns the count of characters where the character **did not** change from the previous one,
+# plus 1 for the first character.
+
+# Time Complexity:
+# O(n), where `n` is the length of the input string `word`.
+
+# Space Complexity:
+# O(1), only uses a few integer variables.
+
+class Solution:
+    def possibleStringCount(self, word: str) -> int:
+        j=len(word)
+        for i in range(1,len(word)):
+            if word[i]!=word[i-1]:
+                j-=1
+        return j
