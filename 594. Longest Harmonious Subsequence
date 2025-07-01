@@ -1,0 +1,26 @@
+# This function finds the length of the **Longest Harmonious Subsequence (LHS)** in the array `nums`.
+# - A harmonious subsequence is one where the difference between the maximum and minimum values is exactly 1.
+# - The function sorts the array and uses a sliding window (two-pointer) technique to find the longest subarray where the difference between elements is exactly 1.
+# - The window `[j, i]` is adjusted:
+#     - If the difference exceeds 1, increment `j` to shrink the window.
+#     - If the difference is exactly 1, update the max length.
+
+# Time Complexity:
+# O(n log n), where n is the length of `nums` — due to the sorting step.
+# - The two-pointer traversal after sorting is O(n).
+
+# Space Complexity:
+# O(1), excluding input storage.
+# - Uses a few integer variables for pointers and tracking max length.
+
+class Solution:
+    def findLHS(self, nums):
+        nums.sort()
+        j=0
+        maxLength=0
+        for i in range(len(nums)):
+            while nums[i]-nums[j]>1:
+                j+=1
+            if nums[i]-nums[j]==1:
+                maxLength=max(maxLength,i-j+1)
+        return maxLength
