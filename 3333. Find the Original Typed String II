@@ -1,0 +1,55 @@
+# This function calculates the number of valid strings that can be formed by rearranging the characters in `word`
+# while satisfying the constraint that **no character appears more than `k` times consecutively**.
+
+# Key Concepts:
+# - `groups`: counts lengths of consecutive character blocks in the input string.
+# - `total`: the total number of unrestricted string formations = product of the group lengths.
+# - If `k <= number of groups`, return the unrestricted total.
+# - Otherwise, use dynamic programming to subtract the number of **invalid arrangements**
+#   (those where any character appears in a group longer than `k`) from the total.
+
+# DP Explanation:
+# - `dp[s]` stores the number of valid ways to fill `s` positions across the groups, with no group exceeding size `k`.
+# - For each group, we calculate `new_dp` based on sliding window over `dp` to enforce the max-length constraint.
+
+# Time Complexity:
+# O(k * g), where:
+# - `k` = maximum allowed consecutive group size
+# - `g` = number of groups (i.e., character change points in `word`)
+
+# Space Complexity:
+# O(k), for maintaining the dynamic programming arrays.
+
+class Solution:
+    MOD = 10**9 + 7
+    def possibleStringCount(self, word: str, k: int) -> int:
+        if not word:
+            return 0
+        groups = []
+        count = 1
+        for i in range(1, len(word)):
+            if word[i] == word[i - 1]:
+                count += 1
+            else:
+                groups.append(count)
+                count = 1
+        groups.append(count)
+        total = 1
+        for num in groups:
+            total = (total * num) % self.MOD
+        if k <= len(groups):
+            return total
+        dp = [0] * k
+        dp[0] = 1
+        for num in groups:
+            new_dp = [0] * k
+            sum_val = 0
+            for s in range(k):
+                if s > 0:
+                    sum_val = (sum_val + dp[s - 1]) % self.MOD
+                if s > num:
+                    sum_val = (sum_val - dp[s - num - 1] + self.MOD) % self.MOD
+                new_dp[s] = sum_val
+            dp = new_dp
+        invalid = sum(dp[len(groups):k]) % self.MOD
+        return (total - invalid + self.MOD) % self.MOD
