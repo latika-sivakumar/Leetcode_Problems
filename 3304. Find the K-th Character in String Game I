@@ -1,0 +1,20 @@
+# This function generates a character sequence starting from 'a', where each character is followed by its cyclic next character in the alphabet ('z' wraps to 'a').
+# It builds the sequence iteratively by appending the next character of each existing character.
+# The function continues this process until the sequence reaches at least length `k`,
+# then returns the k-th character (1-based index).
+
+# Time Complexity:
+# O(k), since at most k characters are generated to find the k-th one.
+
+# Space Complexity:
+# O(k), for storing the sequence in the list `sb`.
+
+class Solution:
+    def kthCharacter(self, k: int) -> str:
+        sb=['a']
+        while len(sb)<k:
+            size=len(sb)
+            for i in range(size):
+                next_char=chr(ord('a')+((ord(sb[i])-ord('a')+1)%26))
+                sb.append(next_char)
+        return sb[k-1]
