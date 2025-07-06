@@ -1,0 +1,22 @@
+# This function finds the largest "lucky" integer in the list `arr`.
+# A "lucky" integer is defined as an integer whose value is equal to its frequency in the array.
+# - It uses a Counter to compute frequencies of all elements.
+# - Iterates through the frequency map to find the largest such integer.
+# - Returns -1 if no lucky number is found.
+
+# Time Complexity:
+# O(n), where n is the length of the input list `arr`.
+# - Counting frequencies and iterating over unique elements both take linear time.
+
+# Space Complexity:
+# O(n), for storing the frequency map in the Counter.
+
+from collections import Counter
+class Solution:
+    def findLucky(self, arr: list[int]) -> int:
+        freq = Counter(arr)
+        lucky = -1
+        for num, count in freq.items():
+            if num == count:
+                lucky = max(lucky, num)
+        return lucky
