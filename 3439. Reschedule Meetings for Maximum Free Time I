@@ -1,0 +1,36 @@
+# This function calculates the **maximum free time** available within a fixed total event duration (`eventTime`)
+# when exactly `k` events are selected from `n` available (with given `startTime` and `endTime`).
+# 
+# - The goal is to choose `k` events such that their total busy time is minimized and the remaining
+#   time (free time) is maximized.
+# - The free time is computed as: available gap (between earliest start and latest end) minus busy time.
+
+# - First compute busy time for the first `k` events.
+# - If all events are chosen (n == k), return total free time as `eventTime - busy`.
+# - Otherwise, use a sliding window of size `k` over the events:
+#   - For each window, update busy time by subtracting the outgoing event duration and adding the new one.
+#   - Compute available free time between end of the first event in the window and the start of the event after the window.
+#   - Track the maximum such free time across all windows.
+
+# Time Complexity:
+# O(n), where n is the number of events.
+# - We loop over all events once with a sliding window of size `k`.
+
+# Space Complexity:
+# O(1), uses a constant number of variables (no additional space used).
+
+class Solution:
+    def maxFreeTime(self, eventTime: int, k: int, startTime: List[int], endTime: List[int]) -> int:
+        n, busy=len(startTime), 0
+        for i in range(k):
+            busy+=endTime[i]-startTime[i] 
+        if n==k: return eventTime-busy
+        ans=startTime[k]-busy
+        l=0
+        for r in range(k, n):
+            busy+=(endTime[r]-startTime[r])-(endTime[l]-startTime[l])
+            end=eventTime if r==n-1 else startTime[r+1]
+            start=endTime[l]
+            ans=max(ans, end-start-busy)
+            l+=1
+        return ans
