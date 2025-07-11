@@ -1,0 +1,39 @@
+# This function returns the room index that gets booked the most.
+# - `n` is the number of rooms, and `m` is a list of meeting intervals [start, end].
+# - Each meeting is assigned to the earliest available room.
+# - If no room is available at the meeting's start time, it is scheduled in the room that becomes free the eyes ß so we soonest,
+#   and the meeting is delayed accordingly.
+# - The function tracks how many times each room is booked, and returns the index of the most frequently used room.
+
+# - Sort meetings by start time.
+# - Track each room's next available time in array `r`.
+# - Track booking count for each room in array `c`.
+# - For each meeting:
+#     - Try to assign it to the first available room.
+#     - If no room is free, delay it and assign to the room with the earliest availability.
+
+# Time Complexity:
+# O(m * n), where:
+# - m is the number of meetings,
+# - n is the number of rooms.
+# This is due to scanning all rooms for availability for each meeting.
+
+# Space Complexity:
+# O(n), for storing availability (`r`) and booking count (`c`) of each room.
+
+class Solution:
+    def mostBooked(self, n: int, m: List[List[int]]) -> int:
+        r, c = [0]*n, [0]*n 
+        for s, e in sorted(m):
+            found = 0
+            for i,f in enumerate(r):
+                if f <= s:
+                    r[i] = e
+                    c[i] += 1
+                    found = 1
+                    break
+            if not found:
+                q = r.index(min(r))
+                r[q] += e-s
+                c[q] += 1
+        return c.index(max(c))
