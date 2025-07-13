@@ -1,0 +1,32 @@
+# This function matches players to trainers based on their strength.
+# - Each player can be matched with one trainer if the trainer's strength is >= the player's.
+# - The goal is to maximize the number of matches.
+
+# - Sort both `players` and `trainers` in ascending order.
+# - Use two pointers to iterate over both lists:
+#     - If a trainer can train the current player, count the match and move both pointers.
+#     - Otherwise, skip the trainer and try the next one.
+
+# Time Complexity:
+# O(n log n + m log m), where:
+# - n = number of players
+# - m = number of trainers
+# For sorting both lists. The matching process itself is O(n + m).
+
+# Space Complexity:
+# O(1), uses constant extra space beyond input lists.
+
+class Solution:
+    def matchPlayersAndTrainers(self, players: List[int], trainers: List[int]) -> int:
+        players.sort()
+        trainers.sort()
+        c=0
+        i=j=0
+        while i<len(players) and j<len(trainers):
+            if players[i]<=trainers[j]:
+                c+=1
+                i+=1
+                j+=1
+            else:
+                j+=1
+        return c
