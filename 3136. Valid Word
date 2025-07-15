@@ -1,0 +1,28 @@
+# This function checks whether a given string `s` is valid based on the following rules:
+# 1. The string must have at least 3 characters.
+# 2. It must contain at least one vowel and at least one consonant.
+# 3. All characters must be either letters or digits.
+#    - Any special character (non-alphanumeric) makes the string invalid.
+
+# Time Complexity:
+# O(n), where n is the length of the string `s`.
+
+# Space Complexity:
+# O(1), only a fixed number of counters and a vowel set are used.
+
+class Solution:
+    def isValid(self, s: str) -> bool:
+        if len(s) < 3:
+            return False
+        vowels = 0
+        consonants = 0
+        vowel_set = "aeiouAEIOU"
+        for c in s:
+            if c.isalpha():
+                if c in vowel_set:
+                    vowels += 1
+                else:
+                    consonants += 1
+            elif not c.isdigit():
+                return False  
+        return vowels >= 1 and consonants >= 1
