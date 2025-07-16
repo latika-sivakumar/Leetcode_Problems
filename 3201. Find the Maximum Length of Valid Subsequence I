@@ -1,0 +1,28 @@
+# This function computes the maximum length of an alternating subsequence of even and odd numbers from the given list `nums`. The alternation must follow an even-odd-even or odd-even-odd pattern.
+
+# - Iterate through each number in the list.
+# - Track total counts of even (`e_c`) and odd (`o_c`) numbers.
+# - Use `ev_c` to track the maximum alternating subsequence length ending in an even number.
+# - Use `od_c` to track the maximum alternating subsequence length ending in an odd number.
+# - Update these values as the sequence alternates.
+
+# Time Complexity:
+# O(n), where n is the number of elements in `nums`.
+
+# Space Complexity:
+# O(1), uses only constant space for counters and state tracking.
+
+class Solution:
+    def maximumLength(self, nums: List[int]) -> int:
+        e_c=0
+        o_c=0
+        ev_c=0
+        od_c=0
+        for i in nums:
+            if i%2==0:
+                e_c+=1
+                ev_c=max(ev_c,od_c+1)
+            else:
+                o_c+=1
+                od_c=max(od_c,ev_c+1)
+        return max(e_c,o_c,ev_c,od_c)
