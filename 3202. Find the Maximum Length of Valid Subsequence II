@@ -1,0 +1,20 @@
+# This function calculates the maximum length of a subsequence where, for every pair (a[i], a[j]) in the subsequence, the sum of a[i] % k and a[j] % k is divisible by k.
+
+# - For each element in the list `a`, only its modulo `k` value matters, so we use `v % k`.
+# - We use `product((v%k for v in a), range(k))` to create all possible (mod value, other) pairs.
+# - For each such pair `p`, we use a dynamic programming-like idea:
+#   `z[p] = z[p[::-1]] + 1` builds upon previously seen reverse pairs to form longer subsequences.
+# - The maximum value in dictionary `z` gives the maximum length of such a valid subsequence.
+
+# Time Complexity:
+# O(n * k), where n is the number of elements in `a`, and `k` is the range of modulo values.
+
+# Space Complexity:
+# O(k²), due to the dictionary storing up to k*k different key combinations.
+
+class Solution:
+    def maximumLength(self, a: List[int], k: int) -> int:
+        z = Counter()
+        for p in product((v%k for v in a),range(k)):
+            z[p] = z[p[::-1]]+1
+        return max(z.values())
