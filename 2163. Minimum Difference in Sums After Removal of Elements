@@ -1,0 +1,45 @@
+# Given a list `nums` of length 3n, split it into three parts: left (first n), middle (next n), and right (last n).
+# The task is to remove n elements such that the remaining 2n elements are split into two halves (left and right), and the absolute difference of their sums is minimized.
+
+# 1. Use two heaps:
+#    - Max Heap (`pqL`) to track the n smallest elements from the left+middle region.
+#    - Min Heap (`pqR`) to track the n largest elements from the middle+right region.
+# 2. First half: From left to middle
+#    - Maintain a max heap for the first n elements (`pqL`) and a running sum.
+#    - For each `i` from n to 2n, update the sum if current `nums[i]` is smaller than max in heap.
+#    - Store prefix sums in `diff`.
+# 3. Second half: From right to middle
+#    - Maintain a min heap (`pqR`) from the last n elements.
+#    - Traverse backwards from index 2n-1 to n-1.
+#    - At each point, subtract the suffix sum from prefix sum stored in `diff` and track the minimum.
+
+# Time Complexity:
+# O(n log n), where n = len(nums) // 3 — due to heap operations in two passes.
+
+# Space Complexity:
+# O(n), for heap and diff array.
+
+class Solution:
+    def minimumDifference(self, nums: List[int]) -> int:
+        n=len(nums)//3
+        diff=[0]*(n+1)
+        heapify(pqL:=[-x for x in nums[:n]])
+        heapify(pqR:=nums[2*n:])
+        Sum=sum(nums[:n])
+        ans=Sum
+        for i in range(n, 2*n+1):
+            diff[i-n]=Sum
+            x=nums[i]
+            if x>=-pqL[0]: continue
+            Sum+=x+pqL[0]
+            heapreplace(pqL, -x)
+        Sum=sum(nums[2*n:])
+        ans-=Sum
+        for i in range(2*n-1, n-2, -1):
+            diff[i-n+1]-=Sum
+            ans=min(ans, diff[i-n+1])
+            x=nums[i]
+            if x<=pqR[0]: continue
+            Sum+=x-pqR[0]
+            heapreplace(pqR, x)
+        return ans
