@@ -1,0 +1,18 @@
+# 1. Sort the folder list lexicographically so that parent folders come before subfolders.
+# 2. Initialize the result list with the first folder.
+# 3. Iterate through the sorted list and check if the current folder starts with the last folder in the result list plus "/".
+# 4. If it doesn't, it's not a subfolder, so add it to the result list.
+# 5. Return the result list containing only top-level folders (no subfolders).
+
+# Time Complexity: O(n * m), where n is the number of folders and m is the average folder path length (due to `startswith` comparison).
+
+# Space Complexity: O(n) to store the final result list.
+
+class Solution:
+    def removeSubfolders(self, folder: List[str]) -> List[str]:
+        folder.sort()
+        l=[folder[0]]
+        for i in folder[1:]:
+            if not i.startswith(l[-1]+"/"):
+                l.append(i)
+        return l
