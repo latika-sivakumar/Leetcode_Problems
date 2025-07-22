@@ -1,0 +1,24 @@
+# - Use a sliding window technique with two pointers (`left` and `right`) to find the maximum sum of a subarray with all unique elements.
+# - Maintain a set `seen` to track elements in the current window.
+# - If a duplicate is found, move the `left` pointer and remove elements from the set until the duplicate is removed.
+# - Continuously update the current window sum and the maximum sum found so far.
+
+# Time Complexity: O(n), where n is the number of elements in `nums`. Each element is added and removed from the set at most once.
+
+# Space Complexity: O(n), for the set used to store unique elements in the current window.
+
+class Solution:
+    def maximumUniqueSubarray(self, nums: List[int]) -> int:
+        seen = set()
+        left = 0
+        current_sum = 0
+        max_sum = 0
+        for right in range(len(nums)):
+            while nums[right] in seen:
+                current_sum -= nums[left]
+                seen.remove(nums[left])
+                left += 1
+            current_sum += nums[right]
+            seen.add(nums[right])
+            max_sum = max(max_sum, current_sum)
+        return max_sum
