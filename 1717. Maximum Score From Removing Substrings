@@ -1,0 +1,24 @@
+# - This solution removes maximum gain substrings ("ab" or "ba") from the input string `s` greedily.
+# - It prioritizes removing the higher-gain substring first by sorting the pairs (x, "ab") and (y, "ba") in descending order of points.
+# - For each preferred substring, a stack is used to simulate the removal process:
+#     - If the current character and the top of the stack form the target substring, remove it and add its gain.
+#     - Otherwise, push the character to the stack.
+# - After one pass, the modified string is updated to `s` for the second substring removal.
+
+# Time Complexity: O(n), where n is the length of the input string `s`. The string is traversed at most twice.
+
+# Space Complexity: O(n), for the stack used to simulate the removal process.
+
+class Solution:
+    def maximumGain(self, s: str, x: int, y: int) -> int:
+        r=0
+        for i,j in sorted(((x,"ab"),(y,"ba")))[::-1]:
+            stack=[]
+            for ch in s:
+                if stack and stack[-1]+ch==j:
+                    r+=i
+                    stack.pop()
+                else:
+                    stack.append(ch)
+            s=stack
+        return r
