@@ -1,0 +1,18 @@
+# - This function computes the maximum sum based on unique positive numbers in the list.
+# - It first filters out positive numbers and adds them to a set to ensure uniqueness.
+# - If there are no positive numbers (i.e., the set is empty or sums to 0), it returns the maximum element from the original list.
+# - Otherwise, it returns the sum of all unique positive numbers.
+
+# Time Complexity: O(n), where n is the length of the input list — for iteration and summing.
+# Space Complexity: O(n), for storing the unique positive numbers in a set.
+
+class Solution:
+    def maxSum(self, nums: List[int]) -> int:
+        l=set()
+        for i in nums:
+            if i>0:
+                l.add(i)
+        if sum(l)==0:
+            return max(nums)
+        else:
+            return sum(l)
