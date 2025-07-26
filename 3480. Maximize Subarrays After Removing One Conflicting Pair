@@ -1,0 +1,30 @@
+# - This function counts the number of valid subarrays in the range [1, n] avoiding conflicting pairs.
+# - For each number r from 1 to n, it tracks all the left endpoints `l` of conflicting pairs (l, r) using a list `right`.
+# - `left[0]` keeps the maximum conflicting left boundary for current r, and `left[1]` is the second highest.
+# - For each r, the count of valid subarrays ending at r is incremented by (r - left[0]).
+# - If there was a conflict at left[0], a bonus is tracked that could improve the final result.
+# - In the end, the sum of all subarrays plus the best possible bonus gives the result.
+
+# Time Complexity: O(n + m), where n is the given number and m is the number of conflicting pairs.
+# Space Complexity: O(n + m), for storing the `right` list, `bonus`, and other auxiliary data.
+
+from typing import List
+
+class Solution:
+    def maxSubarrays(self, n: int, conflictingPairs: List[List[int]]) -> int:
+        right = [[] for _ in range(n + 1)]
+        for a, b in conflictingPairs:
+            right[max(a, b)].append(min(a, b))
+        ans = 0
+        left = [0, 0]
+        bonus = [0] * (n + 1)
+        for r in range(1, n + 1):
+            for l in right[r]:
+                if l > left[0]:
+                    left = [l, left[0]]
+                elif l > left[1]:
+                    left = [left[0], l]
+            ans += r - left[0]
+            if left[0] > 0:
+                bonus[left[0]] += left[0] - left[1]
+        return ans + max(bonus)
