@@ -1,0 +1,21 @@
+# - This function counts the number of subsets in `nums` whose bitwise OR equals the maximum possible OR of any subset.
+# - First, compute `max_or`, the OR of all elements in `nums`.
+# - Then use DFS (backtracking) to explore all subsets.
+# - At each step, we can either include the current element (updating the OR) or exclude it.
+# - Count the subset only if its OR equals `max_or`.
+
+# Time Complexity: O(2^n), where n is the number of elements in `nums` (due to all subsets).
+# Space Complexity: O(n), due to the recursion stack in DFS.
+
+class Solution:
+    def countMaxOrSubsets(self, nums):
+        max_or = 0
+        for n in nums:
+            max_or |= n
+        def dfs(i, curr_or):
+            if i == len(nums):
+                return 1 if curr_or == max_or else 0
+            include = dfs(i + 1, curr_or | nums[i])
+            exclude = dfs(i + 1, curr_or)
+            return include + exclude
+        return dfs(0, 0)
