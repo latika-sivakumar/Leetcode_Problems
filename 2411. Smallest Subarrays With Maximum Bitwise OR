@@ -1,0 +1,22 @@
+# - The goal is to find the length of the smallest subarray starting at each index i such that the bitwise OR of the subarray is the same as the OR from index i to the end.
+# - `latest[b]` stores the latest index where the b-th bit is set.
+# - Iterate from right to left and track the farthest index needed to preserve all set bits from i onwards.
+# - The result for each index is the distance to the farthest such index.
+
+# Time Complexity: O(n * 32) = O(n), where n is the number of elements and 32 is the number of bits (constant).
+# Space Complexity: O(n + 32) = O(n), due to result array and latest bit tracking.
+
+class Solution:
+    def smallestSubarrays(self, nums: List[int]) -> List[int]:
+        n = len(nums)
+        result = [0] * n
+        latest = [-1] * 32
+        for i in range(n - 1, -1, -1):
+            farthest = i  
+            for b in range(32):
+                if (nums[i] >> b) & 1:
+                    latest[b] = i
+                if latest[b] != -1:
+                    farthest = max(farthest, latest[b])
+            result[i] = farthest - i + 1
+        return result 
