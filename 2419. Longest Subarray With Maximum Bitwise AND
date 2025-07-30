@@ -1,0 +1,20 @@
+# - The goal is to find the length of the longest contiguous subarray where all elements equal the maximum value in the array.
+# - First, identify the maximum element in the array.
+# - Traverse the array and count consecutive occurrences of this max element.
+# - Reset the count when a different element is encountered, and track the maximum streak.
+
+# Time Complexity: O(n), where n is the length of the input list `nums`.
+
+# Space Complexity: O(1), since only a few variables are used for tracking.
+
+class Solution(object):
+    def longestSubarray(self, nums):
+        ans, cnt = 0, 0
+        max_element = max(nums)
+        for num in nums:
+            if num == max_element:
+                cnt += 1
+            else:
+                cnt = 0
+            ans = max(ans, cnt)
+        return ans
