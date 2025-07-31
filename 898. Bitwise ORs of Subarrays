@@ -1,0 +1,18 @@
+# - The goal is to find the number of distinct bitwise OR results from all subarrays.
+# - `cur` stores all possible OR results ending at the current index.
+# - For each number in the array, compute OR with all elements in `cur` from the previous step and add the number itself.
+# - Add all these OR results to a global set `res` to track unique values.
+# - Finally, return the size of the result set.
+
+# Time Complexity: O(n * log(max_element)), where n is the length of the array.
+#   - In the worst case, each number introduces up to log(max_element) new OR values.
+# Space Complexity: O(n * log(max_element)), due to the sets storing intermediate OR results.
+
+class Solution:
+    def subarrayBitwiseORs(self, arr):
+        res = set()
+        cur = set()
+        for num in arr:
+            cur = {num | x for x in cur} | {num}
+            res |= cur
+        return len(res)
