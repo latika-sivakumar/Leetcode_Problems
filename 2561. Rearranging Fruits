@@ -1,0 +1,24 @@
+# - The goal is to make both baskets identical with minimum cost.
+# - Count frequency of each item in both baskets using a Counter.
+# - Subtract frequencies of basket2 from basket1 to find imbalance.
+# - If any imbalance is odd, it's impossible to balance → return -1.
+# - For each element with imbalance, we need to swap half of the difference.
+# - Sort the elements to be swapped and compute cost:
+#   Either pay the cost of the element itself, or 2 * min_value (cheapest swap via minimum global element).
+
+# Time Complexity: O(n log n), due to sorting the list of elements to be swapped.
+
+# Space Complexity: O(n), for counting frequencies and storing elements to swap.
+
+class Solution:
+    def minCost(self, basket1: List[int], basket2: List[int]) -> int:
+        cnt = Counter(basket1)
+        for x in basket2: cnt[x] -= 1
+        last = []
+        for k, v in cnt.items():
+            if v % 2 != 0:
+                return -1
+            last += [k] * abs(v // 2)
+        minx = min(basket1 + basket2)
+        last.sort()
+        return sum(min(2*minx, x) for x in last[0:len(last)//2])
