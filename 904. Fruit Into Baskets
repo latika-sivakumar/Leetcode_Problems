@@ -1,0 +1,34 @@
+# - This function finds the length of the longest subarray with at most two distinct elements.
+# - It uses a sliding window approach with variables tracking:
+#   - `last`: the most recent fruit type,
+#   - `second_last`: the previous fruit type before `last`,
+#   - `last_count`: how many times `last` has occurred consecutively,
+#   - `curr`: current window length,
+#   - `res`: maximum window length found so far.
+# - If the current fruit is one of the last two types, extend the window.
+# - Otherwise, reset the window to include only the last streak and the current fruit.
+# - Update maximum result at each step.
+
+# Time Complexity: O(n), where n is the length of `fruits`.
+# Space Complexity: O(1), uses constant extra space.
+
+class Solution:
+    def totalFruit(self, fruits: List[int]) -> int:
+        last = second_last = -1
+        last_count = curr = res = 0
+
+        for f in fruits:
+            if f == last or f == second_last:
+                curr += 1
+            else:
+                curr = last_count + 1
+
+            if f == last:
+                last_count += 1
+            else:
+                last_count = 1
+                second_last, last = last, f
+
+            res = max(res, curr)
+
+        return res
