@@ -1,0 +1,24 @@
+# - Given two lists: `fruits` and `baskets`, each of size n.
+# - Each fruit has a size, and each basket has a capacity.
+# - A fruit can be placed in a basket only if its size is less than or equal to the basket's capacity.
+# - Each basket can hold at most one fruit.
+# - Goal: Return the number of fruits that cannot be placed in any basket.
+
+# - For each fruit, try placing it in the first available basket that can hold it.
+# - If a basket is used, mark it as -1 to indicate it's no longer available.
+# - Count how many fruits are successfully placed and return the number of unplaced ones.
+
+# Time Complexity: O(n^2) – for each fruit, we may scan all baskets.
+# Space Complexity: O(1) – in-place modification of baskets, uses constant extra space.
+
+class Solution:
+    def numOfUnplacedFruits(self, fruits: list[int], baskets: list[int]) -> int:
+        n = len(fruits)
+        alloted = 0
+        for i in range(n):
+            for j in range(n):
+                if fruits[i] <= baskets[j]:
+                    baskets[j] = -1  
+                    alloted += 1
+                    break
+        return n - alloted
