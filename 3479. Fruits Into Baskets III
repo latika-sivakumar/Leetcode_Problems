@@ -1,0 +1,48 @@
+# This function calculates the number of fruits that cannot be placed into baskets using a Segment Tree.
+# Each fruit can only be placed into one basket, and each basket can hold at most one fruit.
+# A fruit can only be placed if its size is less than or equal to the basket's capacity.
+# The Segment Tree is built to allow efficient querying of the maximum available basket capacity.
+# For each fruit, a binary search is performed on the Segment Tree to find the leftmost basket that can hold it.
+# Once a basket is used, its value is updated to -1, and the Segment Tree is updated accordingly.
+
+# Time Complexity:
+# - Building the Segment Tree: O(n)
+# - For each fruit:
+#     - Querying and updating the tree: O(log n)
+# - So total time: O(n + m * log n), where n = number of baskets, m = number of fruits
+
+# Space Complexity: O(n), for storing the Segment Tree of size 2 * N (where N is the next power of 2 ≥ n)
+
+class Solution:
+    def numOfUnplacedFruits(self, fruits: List[int], baskets: List[int]) -> int:
+        n = len(baskets)
+        N = 1
+        while N <= n:
+            N <<= 1
+        segTree = [0] * (2 * N)
+        
+        for i in range(n):
+            segTree[N + i] = baskets[i]
+        
+        for i in range(N - 1, 0, -1):
+            segTree[i] = max(segTree[2 * i], segTree[2 * i + 1])
+        
+        count = 0
+        for fruit in fruits:
+            index = 1
+            if segTree[index] < fruit:
+                count += 1
+                continue
+            
+            while index < N:
+                if segTree[2 * index] >= fruit:
+                    index = 2 * index
+                else:
+                    index = 2 * index + 1
+            
+            segTree[index] = -1
+            while index > 1:
+                index //= 2
+                segTree[index] = max(segTree[2 * index], segTree[2 * index + 1])
+        
+        return count
