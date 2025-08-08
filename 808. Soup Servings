@@ -1,0 +1,42 @@
+# This function calculates the probability that soup A becomes empty first 
+# in a probabilistic serving process between two soups (A and B).
+# - Soup is served in units of 25 ml.
+# - Each serving operation randomly chooses one of four patterns, each equally likely.
+# - If both soups become empty at the same time, the probability contribution is 0.5.
+# - If soup A empties first, it contributes 1.0 to the probability.
+# - If soup B empties first, it contributes 0.0.
+# - The process is solved using recursion with memoization (LRU cache) to avoid recalculating states.
+# - For n > 5000 ml, probability is effectively 1.0 due to convergence.
+
+# Time Complexity: O(n^2)
+# - The state space is bounded by (n / 25)^2, since each parameter decreases in steps up to units.
+# - Memoization ensures each state is computed once.
+
+# Space Complexity: O(n^2)
+# - Due to memoization storage of all possible (soupA, soupB) states.
+
+from functools import lru_cache
+import math
+
+class Solution:
+    def soupServings(self, n: int) -> float:
+        if n > 5000:
+            return 1.0
+        units = math.ceil(n / 25)
+
+        @lru_cache(None)
+        def calc_prob(soupA, soupB):
+            if soupA <= 0 and soupB <= 0:
+                return 0.5
+            if soupA <= 0:
+                return 1.0
+            if soupB <= 0:
+                return 0.0
+            return 0.25 * (
+                calc_prob(soupA - 4, soupB) +
+                calc_prob(soupA - 3, soupB - 1) +
+                calc_prob(soupA - 2, soupB - 2) +
+                calc_prob(soupA - 1, soupB - 3)
+            )
+
+        return calc_prob(units, units)
