@@ -1,0 +1,15 @@
+# This function checks if a given integer n is a power of two.
+# - A number is a power of two if it has exactly one bit set in its binary form.
+# - Instead of checking bits directly, we use the fact that all powers of two up to 2^30 divide 2^30 evenly.
+# - The expression (1 << 30) generates 2^30, the largest power of two within a signed 32-bit integer range.
+# - If n is positive and divides 2^30 without a remainder, it must be a power of two.
+
+# Time Complexity: O(1)
+# - All operations (shift, comparison, modulus) are constant time.
+
+# Space Complexity: O(1)
+# - No extra memory is used.
+
+class Solution:
+    def isPowerOfTwo(self, n: int) -> bool:
+        return n>0 and (1<<30)%n==0
